@@ -66,6 +66,40 @@ impl ::std::fmt::Display for MoveLeft {
     }
 }
 
+/// Move the cursor to beginning of line the given number of lines down.
+#[derive(Copy, Clone, Debug)]
+pub struct MoveToNextLine(pub u16);
+
+impl ::std::fmt::Display for MoveToNextLine {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, csi!("{}E"), self.0)
+    }
+}
+
+/// Move the cursor to beginning of line the given number of lines up.
+#[derive(Copy, Clone, Debug)]
+pub struct MoveToPreviousLine(pub u16);
+
+impl ::std::fmt::Display for MoveToPreviousLine {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, csi!("{}F"), self.0)
+    }
+}
+
+/// Move the cursor to the given column.
+///
+/// # Notes
+///
+/// Beginning of the line (left cell) is represented as `0`.
+#[derive(Copy, Clone, Debug)]
+pub struct MoveToColumn(pub u16);
+
+impl ::std::fmt::Display for MoveToColumn {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, csi!("{}G"), self.0 + 1)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -123,5 +157,20 @@ mod tests {
     #[test]
     fn test_move_to() {
         assert_eq!(&format!("{}", MoveTo(5, 10)), "\x1B[6;11H");
+    }
+
+    #[test]
+    fn test_move_to_next_line() {
+        assert_eq!(&format!("{}", MoveToNextLine(5)), "\x1B[5E");
+    }
+
+    #[test]
+    fn test_move_to_previous_line() {
+        assert_eq!(&format!("{}", MoveToPreviousLine(5)), "\x1B[5F");
+    }
+
+    #[test]
+    fn test_move_to_column() {
+        assert_eq!(&format!("{}", MoveToColumn(0)), "\x1B[1G");
     }
 }

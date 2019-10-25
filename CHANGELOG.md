@@ -5,9 +5,14 @@
   - `SwitchToNormal`
   - `ScrollUp`
   - `ScrollDown`
+  - `EraseInLine`
+  - `EraseInDisplay`
 - New `window` module sequences
   - `ResizeTextArea`
-
+- New `cursor` module sequences
+  - `MoveToColumn`
+  - `MoveToNextLine`
+  - `MoveToPreviousLine`
 
 # Version 0.0.2
 
