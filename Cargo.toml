@@ -1,0 +1,15 @@
+[package]
+name = "anes"
+version = "0.0.1"
+authors = ["Robert Vojta <rvojta@me.com>"]
+edition = "2018"
+description = "An ANSI escape sequences."
+repository = "https://github.com/zrzka/anes-rs"
+documentation = "https://docs.rs/anes/"
+license = "MIT"
+keywords = ["console", "terminal", "ansi"]
+exclude = ["target", "Cargo.lock"]
+readme = "README.md"
+
+[badges]
+maintenance = { status = "..." }
