@@ -1,33 +1,22 @@
-//!
-//! TODO - top/left is 0,0
-//!
+//! A terminal cursor related ANSI escape sequences.
 
-impl_esc_sequence!(
-    "A control sequence to save the cursor position.",
-    SavePosition,
-    "7"
-);
-impl_esc_sequence!(
-    "A control sequence to restore the cursor position.",
-    RestorePosition,
-    "8"
-);
+impl_esc_sequence!("Save the cursor position.", SavePosition, "7");
 
-impl_csi_sequence!("A control sequence to hide the cursor.", Hide, "?25l");
-impl_csi_sequence!("A control sequence to show the cursor.", Show, "?25h");
+impl_esc_sequence!("Restore the cursor position.", RestorePosition, "8");
 
-impl_csi_sequence!(
-    "A control sequence to enable the cursor blinking.",
-    EnableBlinking,
-    "?12h"
-);
-impl_csi_sequence!(
-    "A control sequence to disable the cursor blinking.",
-    DisableBlinking,
-    "?12l"
-);
+impl_csi_sequence!("Hide the cursor.", Hide, "?25l");
 
-/// A control sequence to move the cursor to the given location (column, row).
+impl_csi_sequence!("Show the cursor.", Show, "?25h");
+
+impl_csi_sequence!("Enable the cursor blinking.", EnableBlinking, "?12h");
+
+impl_csi_sequence!("Disable the cursor blinking.", DisableBlinking, "?12l");
+
+/// Move the cursor to the given location (column, row).
+///
+/// # Notes
+///
+/// Top/left cell is represented as `0, 0`.
 #[derive(Copy, Clone, Debug)]
 pub struct MoveTo(pub u16, pub u16);
 
@@ -37,7 +26,7 @@ impl ::std::fmt::Display for MoveTo {
     }
 }
 
-/// A control sequence to move the cursor by the given number of rows up.
+/// Move up the cursor by the given number of rows.
 #[derive(Copy, Clone, Debug)]
 pub struct MoveUp(pub u16);
 
@@ -47,7 +36,7 @@ impl ::std::fmt::Display for MoveUp {
     }
 }
 
-/// A control sequence to move the cursor by the given number of rows down.
+/// Move down the cursor by the given number of rows.
 #[derive(Copy, Clone, Debug)]
 pub struct MoveDown(pub u16);
 
@@ -57,7 +46,7 @@ impl ::std::fmt::Display for MoveDown {
     }
 }
 
-/// A control sequence to move the cursor by the given number of columns right.
+/// Move right the cursor by the given number of columns.
 #[derive(Copy, Clone, Debug)]
 pub struct MoveRight(pub u16);
 
@@ -67,7 +56,7 @@ impl ::std::fmt::Display for MoveRight {
     }
 }
 
-/// A control sequence to move the cursor by the given number of columns right.
+/// Move left the cursor by the given number of columns.
 #[derive(Copy, Clone, Debug)]
 pub struct MoveLeft(pub u16);
 
