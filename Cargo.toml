@@ -12,4 +12,4 @@ exclude = ["target", "Cargo.lock"]
 readme = "README.md"
 
 [badges]
-maintenance = { status = "..." }
+maintenance = { status = "experimental" }
