@@ -39,3 +39,4 @@ mod macros;
 
 pub mod buffer;
 pub mod cursor;
+pub mod window;
