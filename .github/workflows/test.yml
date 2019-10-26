@@ -12,7 +12,7 @@ on:
 
 jobs:
   test:
-    name: ${{matrix.rust}} on ${{ matrix.os }}
+    name: ${{ matrix.rust-toolchain }} on ${{ matrix.os }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -36,7 +36,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ matrix.rust }}
+          toolchain: ${{ matrix.rust-toolchain }}
           override: true
           components: rustfmt, clippy
 
