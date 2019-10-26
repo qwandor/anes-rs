@@ -13,46 +13,63 @@ on:
 jobs:
   test:
     name: ${{matrix.rust}} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+
     strategy:
       matrix:
         os: [ubuntu-latest]
-        rust: [stable]
-        # Allow failures on nightly, it's just informative
+        rust: [stable, nightly]
+        # Allow failures on nightly, informative
         include:
-          - rust: stable
+          - rust-toolchain: stable
             can-fail: false
-          - rust: nightly
+          - rust-toolchain: nightly
             can-fail: true
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
         with:
           fetch-depth: 1
-      - name: Install Rust
-        uses: hecrj/setup-rust-action@master
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
         with:
-          rust-version: ${{ matrix.rust }}
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
           components: rustfmt, clippy
-      - name: Toolchain Information
-        run: |
-          rustc --version
-          rustfmt --version
-          rustup --version
-          cargo --version
+
       - name: Check formatting
-        if: matrix.rust == 'stable'
-        run: cargo fmt --all -- --check
+        uses: actions-rs/cargo@v1
+        continue-on-error: ${{ matrix.can-fail }}
+        with:
+          command: fmt
+          args: --all -- --check
+
       - name: Lint the code
-        if: matrix.rust == 'stable'
-        run: cargo clippy
+        uses: actions-rs/cargo@v1
+        continue-on-error: ${{ matrix.can-fail }}
+        with:
+          command: clippy
+          args: -- -D warnings
+
       - name: Test build
-        run: cargo build
+        uses: actions-rs/cargo@v1
         continue-on-error: ${{ matrix.can-fail }}
+        with:
+          command: build
+
       - name: Test all features
-        run: cargo test --all-features -- --nocapture --test-threads 1
+        uses: actions-rs/cargo@v1
         continue-on-error: ${{ matrix.can-fail }}
-      - name: Test packaging
-        if: matrix.rust == 'stable'
-        run: cargo package
-        continue-on-error: ${{ matrix.can-fail }}
+        with:
+          command: test
+          args: --all-features -- --nocapture
+
+      - name: Test publishing (dry run)
+        if: matrix.rust-toolchain == 'stable'
+        uses: actions-rs/cargo@v1
+        with:
+          command: publish
+          args: --dry-run
