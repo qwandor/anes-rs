@@ -1,36 +1,40 @@
 //! A terminal cursor related ANSI escape sequences.
 
-impl_esc_sequence!("Save the cursor position.", SavePosition, "7");
+impl_esc_sequence!("Save the cursor position.", SaveCursorPosition, "7");
 
-impl_esc_sequence!("Restore the cursor position.", RestorePosition, "8");
+impl_esc_sequence!("Restore the cursor position.", RestoreCursorPosition, "8");
 
-impl_csi_sequence!("Hide the cursor.", Hide, "?25l");
+impl_csi_sequence!("Hide the cursor.", HideCursor, "?25l");
 
-impl_csi_sequence!("Show the cursor.", Show, "?25h");
+impl_csi_sequence!("Show the cursor.", ShowCursor, "?25h");
 
-impl_csi_sequence!("Enable the cursor blinking.", EnableBlinking, "?12h");
+impl_csi_sequence!("Enable the cursor blinking.", EnableCursorBlinking, "?12h");
 
-impl_csi_sequence!("Disable the cursor blinking.", DisableBlinking, "?12l");
+impl_csi_sequence!(
+    "Disable the cursor blinking.",
+    DisableCursorBlinking,
+    "?12l"
+);
 
 /// Move the cursor to the given location (column, row).
 ///
 /// # Notes
 ///
-/// Top/left cell is represented as `0, 0`.
+/// Top/left cell is represented as `1, 1`.
 #[derive(Copy, Clone, Debug)]
-pub struct MoveTo(pub u16, pub u16);
+pub struct MoveCursorTo(pub u16, pub u16);
 
-impl ::std::fmt::Display for MoveTo {
+impl ::std::fmt::Display for MoveCursorTo {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, csi!("{};{}H"), self.0 + 1, self.1 + 1)
+        write!(f, csi!("{};{}H"), self.0, self.1)
     }
 }
 
 /// Move up the cursor by the given number of rows.
 #[derive(Copy, Clone, Debug)]
-pub struct MoveUp(pub u16);
+pub struct MoveCursorUp(pub u16);
 
-impl ::std::fmt::Display for MoveUp {
+impl ::std::fmt::Display for MoveCursorUp {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, csi!("{}A"), self.0)
     }
@@ -38,9 +42,9 @@ impl ::std::fmt::Display for MoveUp {
 
 /// Move down the cursor by the given number of rows.
 #[derive(Copy, Clone, Debug)]
-pub struct MoveDown(pub u16);
+pub struct MoveCursorDown(pub u16);
 
-impl ::std::fmt::Display for MoveDown {
+impl ::std::fmt::Display for MoveCursorDown {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, csi!("{}B"), self.0)
     }
@@ -48,9 +52,9 @@ impl ::std::fmt::Display for MoveDown {
 
 /// Move right the cursor by the given number of columns.
 #[derive(Copy, Clone, Debug)]
-pub struct MoveRight(pub u16);
+pub struct MoveCursorRight(pub u16);
 
-impl ::std::fmt::Display for MoveRight {
+impl ::std::fmt::Display for MoveCursorRight {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, csi!("{}C"), self.0)
     }
@@ -58,9 +62,9 @@ impl ::std::fmt::Display for MoveRight {
 
 /// Move left the cursor by the given number of columns.
 #[derive(Copy, Clone, Debug)]
-pub struct MoveLeft(pub u16);
+pub struct MoveCursorLeft(pub u16);
 
-impl ::std::fmt::Display for MoveLeft {
+impl ::std::fmt::Display for MoveCursorLeft {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, csi!("{}D"), self.0)
     }
@@ -68,9 +72,9 @@ impl ::std::fmt::Display for MoveLeft {
 
 /// Move the cursor to beginning of line the given number of lines down.
 #[derive(Copy, Clone, Debug)]
-pub struct MoveToNextLine(pub u16);
+pub struct MoveCursorToNextLine(pub u16);
 
-impl ::std::fmt::Display for MoveToNextLine {
+impl ::std::fmt::Display for MoveCursorToNextLine {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, csi!("{}E"), self.0)
     }
@@ -78,9 +82,9 @@ impl ::std::fmt::Display for MoveToNextLine {
 
 /// Move the cursor to beginning of line the given number of lines up.
 #[derive(Copy, Clone, Debug)]
-pub struct MoveToPreviousLine(pub u16);
+pub struct MoveCursorToPreviousLine(pub u16);
 
-impl ::std::fmt::Display for MoveToPreviousLine {
+impl ::std::fmt::Display for MoveCursorToPreviousLine {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, csi!("{}F"), self.0)
     }
@@ -92,11 +96,11 @@ impl ::std::fmt::Display for MoveToPreviousLine {
 ///
 /// Beginning of the line (left cell) is represented as `0`.
 #[derive(Copy, Clone, Debug)]
-pub struct MoveToColumn(pub u16);
+pub struct MoveCursorToColumn(pub u16);
 
-impl ::std::fmt::Display for MoveToColumn {
+impl ::std::fmt::Display for MoveCursorToColumn {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, csi!("{}G"), self.0 + 1)
+        write!(f, csi!("{}G"), self.0)
     }
 }
 
@@ -105,72 +109,72 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_save_position() {
-        assert_eq!(&format!("{}", SavePosition), "\x1B7");
+    fn test_save_cursor_position() {
+        assert_eq!(&format!("{}", SaveCursorPosition), "\x1B7");
     }
 
     #[test]
-    fn test_restore_position() {
-        assert_eq!(&format!("{}", RestorePosition), "\x1B8");
+    fn test_restore_cursor_position() {
+        assert_eq!(&format!("{}", RestoreCursorPosition), "\x1B8");
     }
 
     #[test]
-    fn test_hide() {
-        assert_eq!(&format!("{}", Hide), "\x1B[?25l");
+    fn test_hide_cursor() {
+        assert_eq!(&format!("{}", HideCursor), "\x1B[?25l");
     }
 
     #[test]
-    fn test_show() {
-        assert_eq!(&format!("{}", Show), "\x1B[?25h");
+    fn test_show_cursor() {
+        assert_eq!(&format!("{}", ShowCursor), "\x1B[?25h");
     }
 
     #[test]
-    fn test_disable_blinking() {
-        assert_eq!(&format!("{}", DisableBlinking), "\x1B[?12l");
+    fn test_disable_cursor_blinking() {
+        assert_eq!(&format!("{}", DisableCursorBlinking), "\x1B[?12l");
     }
 
     #[test]
-    fn test_enable_blinking() {
-        assert_eq!(&format!("{}", EnableBlinking), "\x1B[?12h");
+    fn test_enable_cursor_blinking() {
+        assert_eq!(&format!("{}", EnableCursorBlinking), "\x1B[?12h");
     }
 
     #[test]
-    fn test_move_up() {
-        assert_eq!(&format!("{}", MoveUp(10)), "\x1B[10A");
+    fn test_move_cursor_up() {
+        assert_eq!(&format!("{}", MoveCursorUp(10)), "\x1B[10A");
     }
 
     #[test]
-    fn test_move_down() {
-        assert_eq!(&format!("{}", MoveDown(10)), "\x1B[10B");
+    fn test_move_cursor_down() {
+        assert_eq!(&format!("{}", MoveCursorDown(10)), "\x1B[10B");
     }
 
     #[test]
-    fn test_move_right() {
-        assert_eq!(&format!("{}", MoveRight(10)), "\x1B[10C");
+    fn test_move_cursor_right() {
+        assert_eq!(&format!("{}", MoveCursorRight(10)), "\x1B[10C");
     }
 
     #[test]
-    fn test_move_left() {
-        assert_eq!(&format!("{}", MoveLeft(10)), "\x1B[10D");
+    fn test_move_cursor_left() {
+        assert_eq!(&format!("{}", MoveCursorLeft(10)), "\x1B[10D");
     }
 
     #[test]
-    fn test_move_to() {
-        assert_eq!(&format!("{}", MoveTo(5, 10)), "\x1B[6;11H");
+    fn test_move_cursor_to() {
+        assert_eq!(&format!("{}", MoveCursorTo(5, 10)), "\x1B[5;10H");
     }
 
     #[test]
-    fn test_move_to_next_line() {
-        assert_eq!(&format!("{}", MoveToNextLine(5)), "\x1B[5E");
+    fn test_move_cursor_to_next_line() {
+        assert_eq!(&format!("{}", MoveCursorToNextLine(5)), "\x1B[5E");
     }
 
     #[test]
-    fn test_move_to_previous_line() {
-        assert_eq!(&format!("{}", MoveToPreviousLine(5)), "\x1B[5F");
+    fn test_move_cursor_to_previous_line() {
+        assert_eq!(&format!("{}", MoveCursorToPreviousLine(5)), "\x1B[5F");
     }
 
     #[test]
-    fn test_move_to_column() {
-        assert_eq!(&format!("{}", MoveToColumn(0)), "\x1B[1G");
+    fn test_move_cursor_to_column() {
+        assert_eq!(&format!("{}", MoveCursorToColumn(1)), "\x1B[1G");
     }
 }

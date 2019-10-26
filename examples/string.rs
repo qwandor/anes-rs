@@ -1,7 +1,7 @@
 //! An example how to retrieve the ANSI escape sequence as a `String`.
-use anes::cursor::SavePosition;
+use anes::SaveCursorPosition;
 
 fn main() {
-    let string = format!("{}", SavePosition);
+    let string = format!("{}", SaveCursorPosition);
     assert_eq!(&string, "\x1B7");
 }

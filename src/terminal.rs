@@ -1,5 +1,5 @@
-//! A terminal window related ANSI escape sequences.
-//!
+//! A terminal related ANSI escape sequences.
+
 /// Resize the text area to the given width and height in characters.
 #[derive(Copy, Clone, Debug)]
 pub struct ResizeTextArea(pub u16, pub u16);

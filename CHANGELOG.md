@@ -1,19 +1,37 @@
-# master
+# Version 0.1.0
+  
+## Breaking Changes
 
-- New `buffer` module sequences
-  - `SwitchToAlternate`
-  - `SwitchToNormal`
-  - `ScrollUp`
-  - `ScrollDown`
-  - `EraseInLine`
-  - `EraseInDisplay`
-- New `window` module sequences
+- No values modification
+  - `MoveCursorTo(1, 1)` moves the cursor to the top/left cell
+    (previously `MoveCursorTo(0, 0)`)
+- Rename all existing cursor related sequences
+  - `Hide` -> `HideCursor`
+  - `Show` -> `ShowCursor`
+  - `EnableBlinking` -> `EnableCursorBlinking`
+  - `DisableBlinking` -> `DisableCursorBlinking`
+  - `MoveTo` -> `MoveCursorTo`
+  - `MoveLeft` -> `MoveCursorLeft`
+  - `MoveRight` -> `MoveCursorRight`
+  - `MoveUp` -> `MoveCursorUp`
+  - `MoveDown` -> `MoveCursorDown`
+
+## New Sequences
+
+- New buffer related sequences
+  - `SwitchBufferToAlternate`
+  - `SwitchBufferToNormal`
+  - `ScrollBufferUp`
+  - `ScrollBufferDown`
+  - `ClearLine`
+  - `ClearBuffer`
+- New window related sequences
   - `ResizeTextArea`
-- New `cursor` module sequences
-  - `MoveToColumn`
-  - `MoveToNextLine`
-  - `MoveToPreviousLine`
-
+- New cursor related sequences
+  - `MoveCursorToColumn`
+  - `MoveCursorToNextLine`
+  - `MoveCursorToPreviousLine`
+  
 # Version 0.0.2
 
 - Initial release

@@ -8,9 +8,9 @@
 //! Retrieve the sequence as a `String`:
 //!
 //! ```rust
-//! use anes::cursor::SavePosition;
+//! use anes::SaveCursorPosition;
 //!
-//! let string = format!("{}", SavePosition);
+//! let string = format!("{}", SaveCursorPosition);
 //! assert_eq!(&string, "\x1B7");
 //! ```
 //!
@@ -19,12 +19,10 @@
 //! ```rust
 //! use std::io::{Result, Write};
 //!
-//! use anes::cursor;
-//!
 //! fn main() -> Result<()> {
 //!     let mut stdout = std::io::stdout();
-//!     write!(stdout, "{}", cursor::SavePosition)?;
-//!     write!(stdout, "{}", cursor::RestorePosition)?;
+//!     write!(stdout, "{}", anes::SaveCursorPosition)?;
+//!     write!(stdout, "{}", anes::RestoreCursorPosition)?;
 //!     stdout.flush()?;
 //!     Ok(())
 //! }
@@ -33,10 +31,24 @@
 #![warn(rust_2018_idioms)]
 #![deny(unused_imports, unused_must_use)]
 
+pub use self::{
+    buffer::{
+        ClearBuffer, ClearLine, ScrollBufferDown, ScrollBufferUp, SwitchBufferToAlternate,
+        SwitchBufferToNormal,
+    },
+    cursor::{
+        DisableCursorBlinking, EnableCursorBlinking, HideCursor, MoveCursorDown, MoveCursorLeft,
+        MoveCursorRight, MoveCursorTo, MoveCursorToColumn, MoveCursorToNextLine,
+        MoveCursorToPreviousLine, MoveCursorUp, RestoreCursorPosition, SaveCursorPosition,
+        ShowCursor,
+    },
+    terminal::ResizeTextArea,
+};
+
 // Keep it first to load all the macros before other modules.
 #[macro_use]
 mod macros;
 
-pub mod buffer;
-pub mod cursor;
-pub mod window;
+mod buffer;
+mod cursor;
+mod terminal;
