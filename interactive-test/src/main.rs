@@ -32,7 +32,7 @@ where
 
     loop {
         queue!(w, anes::ClearBuffer::All, anes::MoveCursorTo(1, 1))?;
-        for line in MENU.split("\n") {
+        for line in MENU.split('\n') {
             queue!(w, line, anes::MoveCursorToNextLine(1))?;
         }
         w.flush()?;
