@@ -1,11 +1,15 @@
-[![Actions Status][actions-status-badge]][actions-status-link]
+[![Stable Status][actions-stable-badge]][actions-link]
+[![Beta Status][actions-beta-badge]][actions-link]
+[![Nightly Status][actions-nightly-badge]][actions-link]
 [![crates.io][crates-badge]][crates-link]
 [![docs.rs][docs-badge]][docs-link]
 [![MIT][mit-license-badge]][mit-license-link]
 ![LOC][loc-badge]
 
-[actions-status-badge]: https://github.com/zrzka/anes-rs/workflows/anes-rs%20test/badge.svg
-[actions-status-link]: https://github.com/zrzka/anes-rs/actions
+[actions-stable-badge]: https://github.com/zrzka/anes-rs/workflows/stable/badge.svg
+[actions-beta-badge]: https://github.com/zrzka/anes-rs/workflows/beta/badge.svg
+[actions-nightly-badge]: https://github.com/zrzka/anes-rs/workflows/nightly/badge.svg
+[actions-link]: https://github.com/zrzka/anes-rs/actions
 
 [crates-badge]: https://img.shields.io/crates/v/anes.svg
 [crates-link]: https://crates.io/crates/anes
