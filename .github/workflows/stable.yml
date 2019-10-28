@@ -18,6 +18,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-2019, macOS-latest]
+        include:
+          - os: windows-2019
+            exclude: --exclude interactive-test
 
     steps:
       - name: Checkout repository
@@ -43,19 +46,19 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --all -- -D warnings
+          args: --all ${{ matrix.exclude }} -- -D warnings
 
       - name: Test build
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --all
+          args: --all ${{ matrix.exclude }}
 
       - name: Test all features
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --all --all-features -- --nocapture
+          args: --all ${{ matrix.exclude }} --all-features -- --nocapture
 
       - name: Test publishing (dry run)
         uses: actions-rs/cargo@v1
