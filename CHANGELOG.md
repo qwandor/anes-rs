@@ -1,3 +1,7 @@
+# master
+
+* Introduce `sequence!` macro to allow to define custom ANSI sequences 
+
 # Version 0.1.0
   
 ## Breaking Changes
