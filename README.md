@@ -4,23 +4,8 @@
 [![crates.io][crates-badge]][crates-link]
 [![docs.rs][docs-badge]][docs-link]
 [![MIT][mit-license-badge]][mit-license-link]
+[![Apache 2.0][apache-license-badge]][apache-license-link]
 ![LOC][loc-badge]
-
-[actions-stable-badge]: https://github.com/zrzka/anes-rs/workflows/stable/badge.svg
-[actions-beta-badge]: https://github.com/zrzka/anes-rs/workflows/beta/badge.svg
-[actions-nightly-badge]: https://github.com/zrzka/anes-rs/workflows/nightly/badge.svg
-[actions-link]: https://github.com/zrzka/anes-rs/actions
-
-[crates-badge]: https://img.shields.io/crates/v/anes.svg
-[crates-link]: https://crates.io/crates/anes
-
-[docs-badge]: https://docs.rs/anes/badge.svg
-[docs-link]: https://docs.rs/anes
-
-[mit-license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[mit-license-link]: ./LICENSE
-
-[loc-badge]: https://tokei.rs/b1/github/zrzka/anes-rs?category=code
 
 # ANSI Escape Sequence
 
@@ -56,4 +41,26 @@ not as a replacement. Think about this when requesting new features.
 
 ## License
 
-This project is licensed under the [MIT license](./LICENSE).
+The ANES crate is dual-licensed under [Apache 2.0][apache-license-link] and
+[MIT][mit-license-link] terms.
+
+Copyrights in the ANES project are retained by their contributors. No
+copyright assignment is required to contribute to the ANES project.
+
+[actions-stable-badge]: https://github.com/zrzka/anes-rs/workflows/stable/badge.svg
+[actions-beta-badge]: https://github.com/zrzka/anes-rs/workflows/beta/badge.svg
+[actions-nightly-badge]: https://github.com/zrzka/anes-rs/workflows/nightly/badge.svg
+[actions-link]: https://github.com/zrzka/anes-rs/actions
+
+[crates-badge]: https://img.shields.io/crates/v/anes.svg
+[crates-link]: https://crates.io/crates/anes
+
+[docs-badge]: https://docs.rs/anes/badge.svg
+[docs-link]: https://docs.rs/anes
+
+[mit-license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[mit-license-link]: ./LICENSE-MIT
+[apache-license-badge]: https://img.shields.io/badge/license-Apache2-blue.svg
+[apache-license-link]: /LICENSE-APACHE
+
+[loc-badge]: https://tokei.rs/b1/github/zrzka/anes-rs?category=code
