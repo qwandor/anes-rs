@@ -13,6 +13,7 @@ on:
 jobs:
   test:
     name: stable on ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
