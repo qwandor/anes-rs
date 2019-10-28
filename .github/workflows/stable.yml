@@ -43,18 +43,19 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: -- -D warnings
+          args: --all -- -D warnings
 
       - name: Test build
         uses: actions-rs/cargo@v1
         with:
           command: build
+          args: --all
 
       - name: Test all features
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --all-features -- --nocapture
+          args: --all --all-features -- --nocapture
 
       - name: Test publishing (dry run)
         uses: actions-rs/cargo@v1
