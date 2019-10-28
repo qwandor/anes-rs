@@ -58,15 +58,15 @@ macro_rules! esc {
 /// use anes::{csi, sequence};
 ///
 /// sequence!(
-///     /// Erases part of the line.
+///     /// Clears part of the buffer.
 ///     enum ClearBuffer {
-///         /// Erase from the cursor position to end of the screen.
+///         /// Clears from the cursor position to end of the screen.
 ///         Below => csi!("J"),
-///         /// Erase from the cursor position to beginning of the screen.
+///         /// Clears from the cursor position to beginning of the screen.
 ///         Above => csi!("1J"),
-///         /// Erase the entire screen.
+///         /// Clears the entire buffer.
 ///         All => csi!("2J"),
-///         /// Erase the entire screen and all saved lines in the scrollback buffer.
+///         /// Clears the entire buffer and all saved lines in the scrollback buffer.
 ///         SavedLines => csi!("3J"),
 ///     }
 /// );
