@@ -1,0 +1,62 @@
+name: stable
+
+on:
+  # Build master branch only
+  push:
+    branches:
+      - master
+  # Build pull requests targeting master branch only
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: stable on ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-2019, macOS-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          components: rustfmt, clippy
+
+      - name: Check formatting
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+      - name: Lint the code
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: -- -D warnings
+
+      - name: Test build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+
+      - name: Test all features
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --all-features -- --nocapture
+
+      - name: Test publishing (dry run)
+        uses: actions-rs/cargo@v1
+        with:
+          command: publish
+          args: --dry-run
