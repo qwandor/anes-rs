@@ -1,11 +1,12 @@
 use std::io::{self, Write};
 
-use crossterm::{input, RawScreen, Result};
+pub use crossterm::Result;
 
 use anes;
 
 #[macro_use]
 mod macros;
+mod test;
 
 const MENU: &str = r#"ANES interactive test
 
@@ -16,8 +17,7 @@ Controls:
 
 Available tests: 
 
-1. TODO
-2. TODO
+1. cursor
 
 Select test to run ('1', '2', ...) or hit 'q' to quit.
 "#;
@@ -26,26 +26,39 @@ fn run<W>(w: &mut W) -> Result<()>
 where
     W: Write,
 {
-    execute!(w, anes::SwitchBufferToAlternate, anes::HideCursor)?;
+    execute!(w, anes::SwitchBufferToAlternate)?;
 
-    let _raw = RawScreen::into_raw_mode()?;
+    let _raw = crossterm::RawScreen::into_raw_mode()?;
 
     loop {
-        queue!(w, anes::ClearBuffer::All, anes::MoveCursorTo(1, 1))?;
+        queue!(
+            w,
+            anes::ClearBuffer::All,
+            anes::HideCursor,
+            anes::MoveCursorTo(1, 1)
+        )?;
         for line in MENU.split('\n') {
             queue!(w, line, anes::MoveCursorToNextLine(1))?;
         }
         w.flush()?;
 
-        match input().read_char() {
-            Ok('q') => break,
-            Ok(_) => {}
-            Err(e) => return Err(e),
+        match read_char()? {
+            '1' => test::cursor::run(w)?,
+            'q' => break,
+            _ => {}
         };
     }
 
     execute!(w, anes::ShowCursor, anes::SwitchBufferToNormal)?;
     Ok(())
+}
+
+pub fn read_char() -> Result<char> {
+    crossterm::input().read_char()
+}
+
+pub fn buffer_size() -> Result<(u16, u16)> {
+    crossterm::terminal().size()
 }
 
 fn main() -> Result<()> {
