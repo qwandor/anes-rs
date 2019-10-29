@@ -19,6 +19,39 @@ macro_rules! queue {
 macro_rules! execute {
     ($dst:expr, $($command:expr),* $(,)?) => {{
         queue!($dst, $($command),*)?;
-        $dst.flush()
+        $dst.flush().map_err(crossterm::ErrorKind::IoError)
     }}
+}
+
+macro_rules! run_tests {
+    (
+        $dst:expr,
+        $(
+            (
+                $(
+                    $command:expr
+                ),*
+                $(,)?
+            )
+        ),*
+        $(,)?
+    ) => {
+        $(
+            queue!(
+                $dst,
+                anes::ClearBuffer::All,
+                anes::MoveCursorTo(1, 1),
+                anes::ShowCursor,
+                anes::EnableCursorBlinking
+            )?;
+
+            execute!($dst, $($command),*)?;
+
+            match $crate::read_char() {
+                Ok('q') => return Ok(()),
+                Err(e) => return Err(e),
+                _ => {},
+            };
+        )*
+    }
 }
