@@ -37,7 +37,7 @@ sequence!(
     ///
     /// Top/left cell is represented as `1, 1`.
     struct MoveCursorTo(u16, u16) =>
-    |this, f| write!(f, csi!("{};{}H"), this.0, this.1)
+    |this, f| write!(f, csi!("{};{}H"), this.1, this.0)
 );
 
 sequence!(
@@ -119,7 +119,7 @@ test_sequences!(
         MoveCursorLeft(10) => "\x1B[10D",
     ),
     test_move_cursor_to(
-        MoveCursorTo(5, 10) => "\x1B[5;10H",
+        MoveCursorTo(5, 10) => "\x1B[10;5H",
     ),
     test_move_cursor_to_next_line(
         MoveCursorToNextLine(5) => "\x1B[5E",
