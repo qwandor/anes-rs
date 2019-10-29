@@ -2,6 +2,8 @@
 
 * Fix `MoveCursorTo` sequence
   * column, row swapped
+* Add interactive test
+  * Run it with `cargo run --bin interactive-test` 
 
 # Version 0.1.1
 
