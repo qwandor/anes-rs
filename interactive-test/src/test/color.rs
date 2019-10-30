@@ -2,7 +2,7 @@ use std::io::Write;
 
 use crate::Result;
 
-const ALL_COLORS: [anes::Color; 16] = [
+const ALL_COLORS: [anes::Color; 21] = [
     anes::Color::Black,
     anes::Color::DarkGrey,
     anes::Color::Grey,
@@ -19,6 +19,11 @@ const ALL_COLORS: [anes::Color; 16] = [
     anes::Color::Magenta,
     anes::Color::DarkCyan,
     anes::Color::Cyan,
+    anes::Color::Ansi(0),
+    anes::Color::Ansi(15),
+    anes::Color::Rgb(255, 0, 0),
+    anes::Color::Rgb(0, 255, 0),
+    anes::Color::Rgb(0, 0, 255),
 ];
 
 fn test_set_foreground_color<W>(w: &mut W) -> Result<()>
