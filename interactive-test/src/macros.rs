@@ -27,12 +27,7 @@ macro_rules! run_tests {
     (
         $dst:expr,
         $(
-            (
-                $(
-                    $command:expr
-                ),*
-                $(,)?
-            )
+            $testfn:ident
         ),*
         $(,)?
     ) => {
@@ -45,7 +40,7 @@ macro_rules! run_tests {
                 anes::EnableCursorBlinking
             )?;
 
-            execute!($dst, $($command),*)?;
+            $testfn($dst)?;
 
             match $crate::read_char() {
                 Ok('q') => return Ok(()),
