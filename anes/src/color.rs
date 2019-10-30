@@ -24,14 +24,14 @@ pub enum Color {
     DarkMagenta,
     /// Dark cyan color.
     DarkCyan,
-    /// Dark grey color.
+    /// Dark gray color.
     ///
     /// Also knows as light (bright) black.
-    DarkGrey,
-    /// Light (bright) grey color.
+    DarkGray,
+    /// Light (bright) gray color.
     ///
     /// Also known as dark white.
-    Grey,
+    Gray,
     /// Light (bright) red color.
     Red,
     /// Light (bright) green color.
@@ -75,8 +75,8 @@ impl fmt::Display for Color {
             Color::DarkBlue => write!(f, "5;4"),
             Color::DarkMagenta => write!(f, "5;5"),
             Color::DarkCyan => write!(f, "5;6"),
-            Color::Grey => write!(f, "5;7"),
-            Color::DarkGrey => write!(f, "5;8"),
+            Color::Gray => write!(f, "5;7"),
+            Color::DarkGray => write!(f, "5;8"),
             Color::Red => write!(f, "5;9"),
             Color::Green => write!(f, "5;10"),
             Color::Yellow => write!(f, "5;11"),
@@ -141,8 +141,8 @@ test_sequences!(
         SetForegroundColor(Color::DarkBlue) => "\x1B[38;5;4m",
         SetForegroundColor(Color::DarkMagenta) => "\x1B[38;5;5m",
         SetForegroundColor(Color::DarkCyan) => "\x1B[38;5;6m",
-        SetForegroundColor(Color::DarkGrey) => "\x1B[38;5;8m",
-        SetForegroundColor(Color::Grey) => "\x1B[38;5;7m",
+        SetForegroundColor(Color::DarkGray) => "\x1B[38;5;8m",
+        SetForegroundColor(Color::Gray) => "\x1B[38;5;7m",
         SetForegroundColor(Color::Red) => "\x1B[38;5;9m",
         SetForegroundColor(Color::Green) => "\x1B[38;5;10m",
         SetForegroundColor(Color::Yellow) => "\x1B[38;5;11m",
@@ -162,8 +162,8 @@ test_sequences!(
         SetBackgroundColor(Color::DarkBlue) => "\x1B[48;5;4m",
         SetBackgroundColor(Color::DarkMagenta) => "\x1B[48;5;5m",
         SetBackgroundColor(Color::DarkCyan) => "\x1B[48;5;6m",
-        SetBackgroundColor(Color::DarkGrey) => "\x1B[48;5;8m",
-        SetBackgroundColor(Color::Grey) => "\x1B[48;5;7m",
+        SetBackgroundColor(Color::DarkGray) => "\x1B[48;5;8m",
+        SetBackgroundColor(Color::Gray) => "\x1B[48;5;7m",
         SetBackgroundColor(Color::Red) => "\x1B[48;5;9m",
         SetBackgroundColor(Color::Green) => "\x1B[48;5;10m",
         SetBackgroundColor(Color::Yellow) => "\x1B[48;5;11m",
