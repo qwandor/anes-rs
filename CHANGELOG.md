@@ -1,4 +1,4 @@
-# master
+# Version 0.1.3
 
 * New color related sequences
   * `SetBackgroundColor`
