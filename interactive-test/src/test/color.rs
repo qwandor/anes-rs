@@ -176,6 +176,7 @@ where
     })
 }
 
+#[allow(clippy::cognitive_complexity)]
 pub fn run<W>(w: &mut W) -> Result<()>
 where
     W: Write,
