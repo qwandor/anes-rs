@@ -79,6 +79,20 @@ where
     execute!(w, "ShowCursor", anes::ShowCursor,)
 }
 
+fn test_enable_cursor_blinking<W>(w: &mut W) -> Result<()>
+where
+    W: Write,
+{
+    execute!(w, "EnableCursorBlinking", anes::EnableCursorBlinking,)
+}
+
+fn test_disable_cursor_blinking<W>(w: &mut W) -> Result<()>
+where
+    W: Write,
+{
+    execute!(w, "DisableCursorBlinking", anes::DisableCursorBlinking,)
+}
+
 fn test_move_cursor_to<W>(w: &mut W) -> Result<()>
 where
     W: Write,
@@ -116,6 +130,10 @@ where
 {
     run_tests!(
         w,
+        test_hide_cursor,
+        test_show_cursor,
+        test_enable_cursor_blinking,
+        test_disable_cursor_blinking,
         test_move_cursor_left,
         test_move_cursor_right,
         test_move_cursor_up,
@@ -125,8 +143,6 @@ where
         test_move_cursor_to_previous_line,
         test_move_cursor_to_column,
         test_save_restore_cursor_position,
-        test_hide_cursor,
-        test_show_cursor,
     );
     Ok(())
 }
