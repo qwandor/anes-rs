@@ -4,8 +4,8 @@ use crate::Result;
 
 const ALL_COLORS: [anes::Color; 21] = [
     anes::Color::Black,
-    anes::Color::DarkGrey,
-    anes::Color::Grey,
+    anes::Color::DarkGray,
+    anes::Color::Gray,
     anes::Color::White,
     anes::Color::DarkRed,
     anes::Color::Red,
