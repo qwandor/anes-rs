@@ -10,21 +10,41 @@ use std::fmt;
 pub enum Color {
     /// Resets the color to the default one.
     Default,
+    /// Black color.
     Black,
+    /// Dark red color.
     DarkRed,
+    /// Dark green color.
     DarkGreen,
+    /// Dark yellow color.
     DarkYellow,
+    /// Dark blue color.
     DarkBlue,
+    /// Dark magenta color.
     DarkMagenta,
+    /// Dark cyan color.
     DarkCyan,
+    /// Dark grey color.
+    ///
+    /// Also knows as light (bright) black.
     DarkGrey,
+    /// Light (bright) grey color.
+    ///
+    /// Also known as dark white.
     Grey,
+    /// Light (bright) red color.
     Red,
+    /// Light (bright) green color.
     Green,
+    /// Light (bright) yellow color.
     Yellow,
+    /// Light (bright) blue color.
     Blue,
+    /// Light (bright) magenta color.
     Magenta,
+    /// Light (bright) cyan color.
     Cyan,
+    /// White color.
     White,
     /// A color from the predefined set of ANSI colors.
     ///
