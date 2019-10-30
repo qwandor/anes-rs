@@ -1,7 +1,5 @@
 use std::io::Write;
 
-use anes;
-
 use crate::Result;
 
 fn test_move_cursor_up<W>(w: &mut W) -> Result<()>

@@ -1,3 +1,9 @@
+# master
+
+* New color related sequences
+  * `SetBackgroundColor`
+  * `SetForegroundColor`
+
 # Version 0.1.2
 
 * Fix `MoveCursorTo` sequence

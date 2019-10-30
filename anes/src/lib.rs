@@ -36,6 +36,7 @@ pub use self::{
         ClearBuffer, ClearLine, ScrollBufferDown, ScrollBufferUp, SwitchBufferToAlternate,
         SwitchBufferToNormal,
     },
+    color::{Color, SetBackgroundColor, SetForegroundColor},
     cursor::{
         DisableCursorBlinking, EnableCursorBlinking, HideCursor, MoveCursorDown, MoveCursorLeft,
         MoveCursorRight, MoveCursorTo, MoveCursorToColumn, MoveCursorToNextLine,
@@ -50,5 +51,6 @@ pub use self::{
 mod macros;
 
 mod buffer;
+mod color;
 mod cursor;
 mod terminal;

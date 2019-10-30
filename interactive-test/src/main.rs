@@ -18,6 +18,7 @@ Controls:
 Available tests: 
 
 1. cursor
+2. color
 
 Select test to run ('1', '2', ...) or hit 'q' to quit.
 "#;
@@ -33,9 +34,11 @@ where
     loop {
         queue!(
             w,
+            anes::SetForegroundColor(anes::Color::Default),
+            anes::SetBackgroundColor(anes::Color::Default),
             anes::ClearBuffer::All,
             anes::HideCursor,
-            anes::MoveCursorTo(1, 1)
+            anes::MoveCursorTo(1, 1),
         )?;
         for line in MENU.split('\n') {
             queue!(w, line, anes::MoveCursorToNextLine(1))?;
@@ -44,6 +47,7 @@ where
 
         match read_char()? {
             '1' => test::cursor::run(w)?,
+            '2' => test::color::run(w)?,
             'q' => break,
             _ => {}
         };
