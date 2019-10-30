@@ -2,7 +2,7 @@ use std::io::Write;
 
 use crate::Result;
 
-const ALL_COLORS: [anes::Color; 21] = [
+const COLORS: [anes::Color; 21] = [
     anes::Color::Black,
     anes::Color::DarkGray,
     anes::Color::Gray,
@@ -32,11 +32,11 @@ where
 {
     queue!(
         w,
-        "All foreground colors on the black & white background.",
+        "Foreground colors on the black & white background",
         anes::MoveCursorToNextLine(2),
     )?;
 
-    for color in &ALL_COLORS {
+    for color in &COLORS {
         let set_fg_color = anes::SetForegroundColor(*color);
 
         queue!(
@@ -69,11 +69,11 @@ where
 {
     queue!(
         w,
-        "All background colors with black & white foreground.",
+        "Background colors with black & white foreground",
         anes::MoveCursorToNextLine(2),
     )?;
 
-    for color in &ALL_COLORS {
+    for color in &COLORS {
         let set_bg_color = anes::SetBackgroundColor(*color);
 
         queue!(
@@ -100,10 +100,94 @@ where
     Ok(())
 }
 
+fn test_color_values_matrix_16x16<W, F>(w: &mut W, title: &str, color: F) -> Result<()>
+where
+    W: Write,
+    F: Fn(u16, u16) -> anes::Color,
+{
+    queue!(w, title)?;
+
+    for idx in 0..=15 {
+        queue!(
+            w,
+            anes::MoveCursorTo(1, idx + 4),
+            format!("{:>width$}", idx, width = 2)
+        )?;
+        queue!(
+            w,
+            anes::MoveCursorTo(idx * 3 + 3, 3),
+            format!("{:>width$}", idx, width = 3)
+        )?;
+    }
+
+    for row in 0..=15u16 {
+        queue!(w, anes::MoveCursorTo(4, row + 4))?;
+        for col in 0..=15u16 {
+            queue!(w, anes::SetForegroundColor(color(col, row)), "███")?;
+        }
+        queue!(
+            w,
+            anes::SetForegroundColor(anes::Color::Default),
+            " ",
+            format!("{:>width$}", row * 16, width = 3),
+            " ..= ",
+            format!("{:>width$}", row * 16 + 15, width = 3),
+        )?;
+    }
+
+    w.flush()?;
+
+    Ok(())
+}
+
+fn test_color_ansi_values<W>(w: &mut W) -> Result<()>
+where
+    W: Write,
+{
+    test_color_values_matrix_16x16(w, "Color::Ansi values", |col, row| {
+        anes::Color::Ansi((row * 16 + col) as u8)
+    })
+}
+
+fn test_rgb_red_values<W>(w: &mut W) -> Result<()>
+where
+    W: Write,
+{
+    test_color_values_matrix_16x16(w, "Color::Rgb red values", |col, row| {
+        anes::Color::Rgb((row * 16 + col) as u8, 0, 0)
+    })
+}
+
+fn test_rgb_green_values<W>(w: &mut W) -> Result<()>
+where
+    W: Write,
+{
+    test_color_values_matrix_16x16(w, "Color::Rgb green values", |col, row| {
+        anes::Color::Rgb(0, (row * 16 + col) as u8, 0)
+    })
+}
+
+fn test_rgb_blue_values<W>(w: &mut W) -> Result<()>
+where
+    W: Write,
+{
+    test_color_values_matrix_16x16(w, "Color::Rgb blue values", |col, row| {
+        anes::Color::Rgb(0, 0, (row * 16 + col) as u8)
+    })
+}
+
 pub fn run<W>(w: &mut W) -> Result<()>
 where
     W: Write,
 {
-    run_tests!(w, test_set_foreground_color, test_set_background_color,);
+    run_tests!(
+        w,
+        test_set_foreground_color,
+        test_set_background_color,
+        test_color_ansi_values,
+        test_rgb_red_values,
+        test_rgb_green_values,
+        test_rgb_blue_values,
+    );
     Ok(())
 }
