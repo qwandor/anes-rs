@@ -1,4 +1,4 @@
-# master
+# Version 0.1.2
 
 * Fix `MoveCursorTo` sequence
   * column, row swapped
