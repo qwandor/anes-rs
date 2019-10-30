@@ -13,6 +13,54 @@ A Rust library which provides an ANSI escape sequences (or codes, whatever you l
 
 Current status is **experimental**.
 
+## Goals
+
+* Provide ANSI escape sequences.
+* Provide input events parser (2nd phase).
+
+## Examples
+
+<details>
+<summary>
+Click to show Cargo.toml.
+</summary>
+
+```toml
+[dependencies]
+anes = "0.1"
+```
+
+</details>
+<p></p>
+
+
+An example how to retrieve the ANSI escape sequence as a `String`:
+
+```rust
+use anes::SaveCursorPosition;
+
+fn main() {
+    let string = format!("{}", SaveCursorPosition);
+    assert_eq!(&string, "\x1B7");
+}
+```
+
+An example how to use the ANSI escape sequence:
+
+```rust
+use std::io::{Result, Write};
+
+use anes;
+
+fn main() -> Result<()> {
+    let mut stdout = std::io::stdout();
+    write!(stdout, "{}", anes::SaveCursorPosition)?;
+    write!(stdout, "{}", anes::RestoreCursorPosition)?;
+    stdout.flush()?;
+    Ok(())
+}
+```
+
 ## Motivation
 
 There're couple of terminal crates like:
@@ -29,15 +77,6 @@ All these crates do share two pieces of code:
 I think that it's a waste of resources and asked Timon (the `crossterm` crate maintainer) what he thinks
 about a new crate as a building block for the `crossterm` and other crates. And here we
 are ...
-
-## Goals
-
-* Provide ANSI escape sequences.
-* Provide input events parser (2nd phase).
-
-This crate does not and wont support execution or any other features not mentioned in
-the goals section. It should be used as a building block for other crates like `crossterm` and
-not as a replacement. Think about this when requesting new features.
 
 ## License
 
