@@ -5,6 +5,7 @@
 * Add display attributes (bold, italic, ...) related sequences
   * `SetAttribute`
   * `ResetAttributes`
+* Improve documentation  
 
 # Version 0.1.3
 

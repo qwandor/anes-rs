@@ -8,6 +8,16 @@ sequence!(
     /// * [`SetAttribute`](struct.SetAttribute.html)
     /// * [`SetForegroundColor`](struct.SetBackgroundColor.html)
     /// * [`SetBackgroundColor`](struct.SetForegroundColor.html)
+    /// 
+    /// # Examples
+    /// 
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::ResetAttributes;
+    /// 
+    /// let mut stdout = stdout();
+    /// write!(stdout, "{}", ResetAttributes);
+    /// ```
     struct ResetAttributes => sgr!("0")
 );
 
@@ -18,11 +28,12 @@ sequence!(
 ///
 /// # Examples
 ///
-/// ```
-/// use anes::{SetAttribute, Attribute};
+/// ```no_run
+/// use std::io::{stdout, Write};
+/// use anes::{Attribute, SetAttribute};
 ///
-/// let set_bold = SetAttribute(Attribute::Bold);
-/// assert_eq!(&format!("{}", set_bold), "\x1B[1m");
+/// let mut stdout = stdout();
+/// write!(stdout, "{}Bold text", SetAttribute(Attribute::Bold));
 /// ```
 #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
 pub enum Attribute {
@@ -72,20 +83,21 @@ impl fmt::Display for Attribute {
 
 sequence!(
     /// Sets the display attribute.
-    /// 
+    ///
     /// See the [`Attribute`](enum.Attribute.html) enum for a list of attributes you can (un)set.
-    /// 
+    ///
     /// The [`ResetAttributes`](struct.ResetAttributes.html) sequence can be used to turn off all
     /// attributes.
-    /// 
+    ///
     /// # Examples
     ///
-    /// ```
-    /// use anes::{SetAttribute, Attribute};
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::{Attribute, SetAttribute};
     ///
-    /// let set_bold = SetAttribute(Attribute::Bold);
-    /// assert_eq!(&format!("{}", set_bold), "\x1B[1m");
-    /// ``` 
+    /// let mut stdout = stdout();
+    /// write!(stdout, "{}Blinking text", SetAttribute(Attribute::Blink));
+    /// ```
     struct SetAttribute(Attribute) =>
     |this, f| write!(f, sgr!("{}"), this.0)
 );

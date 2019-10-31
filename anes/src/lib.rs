@@ -1,7 +1,16 @@
 //! # ANSI Escape Sequence
 //!
+//! The `anes` crate provides ANSI escape sequences you can use to control the terminal
+//! cursor (show, hide, ...), colors (foreground, background), display attributes (bold, ...)
+//! and many others.
+//!
 //! Every sequence implements the standard library [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html)
-//! trait. It means that you can use macros like `format!`, `write!` to work with them.
+//! trait. It means that these sequences can be used in macros like
+//! [`format!`](https://doc.rust-lang.org/std/macro.format.html) or
+//! [`write!`](https://doc.rust-lang.org/std/macro.write.html).
+//!
+//! Ask if you need more sequences or use the [`sequence!`](macro.sequence.html) macro to create
+//! your own sequences.
 //!
 //! ## Examples
 //!
@@ -21,8 +30,7 @@
 //!
 //! fn main() -> Result<()> {
 //!     let mut stdout = std::io::stdout();
-//!     write!(stdout, "{}", anes::SaveCursorPosition)?;
-//!     write!(stdout, "{}", anes::RestoreCursorPosition)?;
+//!     write!(stdout, "{}", anes::ResetAttributes)?;
 //!     stdout.flush()?;
 //!     Ok(())
 //! }

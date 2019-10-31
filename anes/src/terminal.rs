@@ -2,6 +2,17 @@
 
 sequence!(
     /// Resizes the text area to the given width and height in characters.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::ResizeTextArea;
+    ///
+    /// let mut stdout = stdout();
+    /// // Resize the terminal to 80x25
+    /// write!(stdout, "{}", ResizeTextArea(80, 25));
+    /// ```
     struct ResizeTextArea(u16, u16) =>
     |this, f| write!(f, csi!("8;{};{}t"), this.1, this.0)
 );

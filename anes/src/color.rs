@@ -10,11 +10,13 @@ use std::fmt;
 ///
 /// # Examples
 ///
-/// ```
-/// use anes::{SetForegroundColor, Color};
+/// ```no_run
+/// use std::io::{stdout, Write};
+/// use anes::{Color, SetForegroundColor};
 ///
-/// let red_fg = SetForegroundColor(Color::Red);
-/// assert_eq!(&format!("{}", red_fg), "\x1B[38;5;9m");
+/// let mut stdout = stdout();
+/// // Set the foreground color to red
+/// write!(stdout, "{}", SetForegroundColor(Color::Red));
 /// ```
 #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
 pub enum Color {
@@ -105,13 +107,13 @@ sequence! {
     ///
     /// # Examples
     ///
-    /// White text:
-    ///
-    /// ```rust
+    /// ```no_run
+    /// use std::io::{stdout, Write};
     /// use anes::{Color, SetForegroundColor};
     ///
-    /// let white_fg = SetForegroundColor(Color::White);
-    /// assert_eq!(&format!("{}", white_fg), "\x1B[38;5;15m");
+    /// let mut stdout = stdout();
+    /// // Set the foreground color to blue
+    /// write!(stdout, "{}", SetForegroundColor(Color::Blue));
     /// ```
     struct SetForegroundColor(Color) =>
     |this, f| match this.0 {
@@ -125,13 +127,13 @@ sequence! {
     ///
     /// # Examples
     ///
-    /// Red background:
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::{Color, SetForegroundColor};
     ///
-    /// ```rust
-    /// use anes::{Color, SetBackgroundColor};
-    ///
-    /// let red_bg = SetBackgroundColor(Color::Red);
-    /// assert_eq!(&format!("{}", red_bg), "\x1B[48;5;9m");
+    /// let mut stdout = stdout();
+    /// // Set the background color to yellow
+    /// write!(stdout, "{}", SetForegroundColor(Color::Yellow));
     /// ```
     struct SetBackgroundColor(Color) =>
     |this, f| match this.0 {

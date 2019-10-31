@@ -1,32 +1,124 @@
 //! A terminal cursor related ANSI escape sequences.
 
 sequence!(
-    /// Saves the cursor position.    
+    /// Saves the cursor position.
+    /// 
+    /// Use the [`RestoreCursorPosition`](struct.RestoreCursorPosition.html) sequence to
+    /// restore the cursor position.
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::{SaveCursorPosition, RestoreCursorPosition};
+    ///
+    /// let mut stdout = stdout();
+    /// // Save cursor position
+    /// write!(stdout, "{}", SaveCursorPosition);
+    /// 
+    /// // Your app
+    /// 
+    /// // Restore cursor position
+    /// write!(stdout, "{}", RestoreCursorPosition);
+    /// ```    
     struct SaveCursorPosition => esc!("7")    
 );
 
 sequence!(
     /// Restores the cursor position.
+    /// 
+    /// Use the [`SaveCursorPosition`](struct.SaveCursorPosition.html) sequence to
+    /// save the cursor position.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::{SaveCursorPosition, RestoreCursorPosition};
+    ///
+    /// let mut stdout = stdout();
+    /// // Save cursor position
+    /// write!(stdout, "{}", SaveCursorPosition);
+    /// 
+    /// // Your app
+    /// 
+    /// // Restore cursor position
+    /// write!(stdout, "{}", RestoreCursorPosition);
+    /// ```
     struct RestoreCursorPosition => esc!("8")
 );
 
 sequence!(
     /// Hides the cursor.
+    /// 
+    /// Use the [`ShowCursor`](struct.ShowCursor.html) sequence to show the cursor.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::HideCursor;
+    ///
+    /// let mut stdout = stdout();
+    /// // Hide cursor
+    /// write!(stdout, "{}", HideCursor);
+    /// ```
     struct HideCursor => csi!("?25l")
 );
 
 sequence!(
     /// Shows the cursor.
+    /// 
+    /// Use the [`HideCursor`](struct.HideCursor.html) sequence to hide the cursor.    
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::ShowCursor;
+    ///
+    /// let mut stdout = stdout();
+    /// // Show cursor
+    /// write!(stdout, "{}", ShowCursor);
+    /// ```
     struct ShowCursor => csi!("?25h")
 );
 
 sequence!(
     /// Enables the cursor blinking.
+    /// 
+    /// Use the [`DisableCursorBlinking`](struct.DisableCursorBlinking.html) sequence to disable
+    /// cursor blinking.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::EnableCursorBlinking;
+    ///
+    /// let mut stdout = stdout();
+    /// // Enable cursor blinking
+    /// write!(stdout, "{}", EnableCursorBlinking);
+    /// ```
     struct EnableCursorBlinking => csi!("?12h")
 );
 
 sequence!(
     /// Disables the cursor blinking.
+    /// 
+    /// Use the [`EnableCursorBlinking`](struct.EnableCursorBlinking.html) sequence to enable
+    /// cursor blinking.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::DisableCursorBlinking;
+    ///
+    /// let mut stdout = stdout();
+    /// // Disable cursor blinking
+    /// write!(stdout, "{}", DisableCursorBlinking);
+    /// ```
     struct DisableCursorBlinking => csi!("?12l")
 );
 
@@ -35,43 +127,140 @@ sequence!(
     ///
     /// # Notes
     ///
-    /// Top/left cell is represented as `1, 1`.
+    /// Top/left cell is represented as `1, 1` (`column, row`).
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::MoveCursorTo;
+    ///
+    /// let mut stdout = stdout();
+    /// // Move cursor to top left cell
+    /// write!(stdout, "{}", MoveCursorTo(1, 1));
+    /// ```
     struct MoveCursorTo(u16, u16) =>
     |this, f| write!(f, csi!("{};{}H"), this.1, this.0)
 );
 
 sequence!(
     /// Moves the cursor up by the given number of rows.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::MoveCursorUp;
+    ///
+    /// let mut stdout = stdout();
+    /// // Move cursor up by 5 rows
+    /// write!(stdout, "{}", MoveCursorUp(5));
+    /// ```
     struct MoveCursorUp(u16) =>
     |this, f| write!(f, csi!("{}A"), this.0)
 );
 
 sequence!(
     /// Moves the cursor down by the given number of rows.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::MoveCursorDown;
+    ///
+    /// let mut stdout = stdout();
+    /// // Move cursor down by 5 rows
+    /// write!(stdout, "{}", MoveCursorDown(5));
+    /// ```
     struct MoveCursorDown(u16) =>
     |this, f| write!(f, csi!("{}B"), this.0)
 );
 
 sequence!(
     /// Moves the cursor right by the given number of columns.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::MoveCursorRight;
+    ///
+    /// let mut stdout = stdout();
+    /// // Move cursor right by 5 columns
+    /// write!(stdout, "{}", MoveCursorRight(5));
+    /// ```
     struct MoveCursorRight(u16) =>
     |this, f| write!(f, csi!("{}C"), this.0)
 );
 
 sequence!(
     /// Moves the cursor left by the given number of columns.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::MoveCursorLeft;
+    ///
+    /// let mut stdout = stdout();
+    /// // Move cursor left by 5 columns
+    /// write!(stdout, "{}", MoveCursorLeft(5));
+    /// ```
     struct MoveCursorLeft(u16) =>
     |this, f| write!(f, csi!("{}D"), this.0)
 );
 
 sequence!(
     /// Moves the cursor to beginning of line the given number of lines down.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::MoveCursorToNextLine;
+    ///
+    /// let mut stdout = stdout();
+    /// // Move cursor down by 2 rows and the move it to the first column
+    /// write!(stdout, "{}", MoveCursorToNextLine(2));
+    /// ```
+    /// 
+    /// The previous example does the same thing as the following one:
+    /// 
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::{MoveCursorDown, MoveCursorToColumn};
+    ///
+    /// let mut stdout = stdout();
+    /// write!(stdout, "{}{}", MoveCursorDown(2), MoveCursorToColumn(1));
+    /// ```
     struct MoveCursorToNextLine(u16) =>
     |this, f| write!(f, csi!("{}E"), this.0)
 );
 
 sequence!(
     /// Moves the cursor to beginning of line the given number of lines up.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::MoveCursorToPreviousLine;
+    ///
+    /// let mut stdout = stdout();
+    /// // Move cursor up by 2 rows and the move it to the first column
+    /// write!(stdout, "{}", MoveCursorToPreviousLine(2));
+    /// ```
+    /// 
+    /// The previous example does the same thing as the following one:
+    /// 
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::{MoveCursorUp, MoveCursorToColumn};
+    ///
+    /// let mut stdout = stdout();
+    /// write!(stdout, "{}{}", MoveCursorUp(2), MoveCursorToColumn(1));
+    /// ```
     struct MoveCursorToPreviousLine(u16) =>
     |this, f| write!(f, csi!("{}F"), this.0)
 );
@@ -82,6 +271,18 @@ sequence!(
     /// # Notes
     ///
     /// Beginning of the line (left cell) is represented as `1`.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::MoveCursorToColumn;
+    ///
+    /// let mut stdout = stdout();
+    /// // Move cursor to the 10th column (same row)
+    /// write!(stdout, "{}", MoveCursorToColumn(10));
+    /// ```
+    /// 
     struct MoveCursorToColumn(u16) =>
     |this, f| write!(f, csi!("{}G"), this.0)
 );
