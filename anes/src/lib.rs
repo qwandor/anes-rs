@@ -12,6 +12,11 @@
 //! Ask if you need more sequences or use the [`sequence!`](macro.sequence.html) macro to create
 //! your own sequences.
 //!
+//! ## Terminal Support
+//!
+//! Not all ANSI escape sequences are supported by all terminals. You can use the
+//! [interactive-test](https://github.com/zrzka/anes-rs/tree/master/interactive-test) to test them.
+//!
 //! ## Examples
 //!
 //! Retrieve the sequence as a `String`:
