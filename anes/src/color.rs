@@ -129,11 +129,11 @@ sequence! {
     ///
     /// ```no_run
     /// use std::io::{stdout, Write};
-    /// use anes::{Color, SetForegroundColor};
+    /// use anes::{Color, SetBackgroundColor};
     ///
     /// let mut stdout = stdout();
     /// // Set the background color to yellow
-    /// write!(stdout, "{}", SetForegroundColor(Color::Yellow));
+    /// write!(stdout, "{}", SetBackgroundColor(Color::Yellow));
     /// ```
     struct SetBackgroundColor(Color) =>
     |this, f| match this.0 {

@@ -32,7 +32,7 @@ macro_rules! esc {
 
 /// Creates a select graphic rendition sequence.
 ///
-/// This macro prepends provided sequence with the `ESC[` (`\x1B`[) character and appends `m` character.
+/// This macro prepends provided sequence with the `ESC[` (`\x1B[`) character and appends `m` character.
 ///
 /// Also known as Set Graphics Rendition on Linux.
 ///
