@@ -2,6 +2,9 @@
 
 * All sequences and related structures auto derive `Copy`, `Clone`, `Debug`, `Hash`, `Eq`, `PartialEq`
 * Add `sgr!` macro for select graphic rendition sequences
+* Add attributes related sequences
+  * `SetAttribute`
+  * `ResetAttributes`
 
 # Version 0.1.3
 
