@@ -32,6 +32,7 @@
 #![deny(unused_imports, unused_must_use)]
 
 pub use self::{
+    attribute::{Attribute, ResetAttributes, SetAttribute},
     buffer::{
         ClearBuffer, ClearLine, ScrollBufferDown, ScrollBufferUp, SwitchBufferToAlternate,
         SwitchBufferToNormal,
@@ -50,6 +51,7 @@ pub use self::{
 #[macro_use]
 mod macros;
 
+mod attribute;
 mod buffer;
 mod color;
 mod cursor;

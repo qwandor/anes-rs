@@ -34,8 +34,7 @@ macro_rules! run_tests {
         $(
             queue!(
                 $dst,
-                anes::SetForegroundColor(anes::Color::Default),
-                anes::SetBackgroundColor(anes::Color::Default),
+                anes::ResetAttributes,
                 anes::ClearBuffer::All,
                 anes::MoveCursorTo(1, 1),
                 anes::ShowCursor,
