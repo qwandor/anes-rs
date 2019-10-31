@@ -7,8 +7,7 @@
 /// ```
 /// use anes::csi;
 ///
-/// let switch_to_alternate_screen = csi!("?1049h");
-/// assert_eq!(switch_to_alternate_screen, "\x1B[?1049h");
+/// assert_eq!(csi!("?1049h"), "\x1B[?1049h");
 /// ```
 #[macro_export]
 macro_rules! csi {
@@ -24,8 +23,7 @@ macro_rules! csi {
 /// ```
 /// use anes::esc;
 ///
-/// let save_cursor_position = esc!("7");
-/// assert_eq!(save_cursor_position, "\x1B7");
+/// assert_eq!(esc!("7"), "\x1B7");
 /// ```
 #[macro_export]
 macro_rules! esc {
@@ -43,8 +41,7 @@ macro_rules! esc {
 /// ```
 /// use anes::sgr;
 ///
-/// let reset_attributes = sgr!("0");
-/// assert_eq!(reset_attributes, "\x1B[0m");
+/// assert_eq!(sgr!("0"), "\x1B[0m");
 /// ```
 #[macro_export]
 macro_rules! sgr {

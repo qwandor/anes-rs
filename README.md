@@ -11,13 +11,6 @@
 
 A Rust library which provides an ANSI escape sequences (or codes, whatever you like more).
 
-Current status is **experimental**.
-
-## Goals
-
-* Provide ANSI escape sequences.
-* Provide input events parser (2nd phase).
-
 ## Examples
 
 <details>
