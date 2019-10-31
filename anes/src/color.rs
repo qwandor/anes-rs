@@ -2,13 +2,23 @@ use std::fmt;
 
 /// A color.
 ///
-/// This is not a full ANSI sequence. `Color` must be used with:
+/// This is **NOT** a full ANSI sequence. `Color` must be used along with
+/// the:
 ///
 /// * [`SetBackgroundColor`](struct.SetBackgroundColor.html)
 /// * [`SetForegroundColor`](struct.SetForegroundColor.html)
+///
+/// # Examples
+///
+/// ```
+/// use anes::{SetForegroundColor, Color};
+///
+/// let red_fg = SetForegroundColor(Color::Red);
+/// assert_eq!(&format!("{}", red_fg), "\x1B[38;5;9m");
+/// ```
 #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
 pub enum Color {
-    /// Resets the color to the default one.
+    /// Default color.
     Default,
     /// Black color.
     Black,
