@@ -32,6 +32,25 @@ macro_rules! esc {
     ($($arg:expr),*) => { concat!("\x1B", $($arg),*) };
 }
 
+/// Creates a select graphic rendition sequence.
+///
+/// This macro prepends provided sequence with the `ESC[` (`\x1B`[) character and appends `m` character.
+///
+/// Also known as Set Graphics Rendition on Linux.
+///
+/// # Examples
+///
+/// ```
+/// use anes::sgr;
+///
+/// let reset_attributes = sgr!("0");
+/// assert_eq!(reset_attributes, "\x1B[0m");
+/// ```
+#[macro_export]
+macro_rules! sgr {
+    ($($arg:expr),*) => { concat!("\x1B[", $($arg),* , "m") };
+}
+
 /// Creates an ANSI sequence.
 ///
 /// You can use this macro to create your own ANSI sequence. All `anes` sequences are

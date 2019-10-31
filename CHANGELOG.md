@@ -1,6 +1,7 @@
 # master
 
 * All sequences and related structures auto derive `Copy`, `Clone`, `Debug`, `Hash`, `Eq`, `PartialEq`
+* Add `sgr!` macro for select graphic rendition sequences
 
 # Version 0.1.3
 
