@@ -11,6 +11,17 @@
 
 A Rust library which provides an ANSI escape sequences (or codes, whatever you like more).
 
+## Terminal Support
+
+Not all ANSI escape sequences are supported by all terminals. You can use the
+[interactive-test](https://github.com/zrzka/anes-rs/tree/master/interactive-test) to test them.
+Checkout the repository and then:
+ 
+```bash
+$ cd anes-rs
+$ cargo run --bin interactive-test
+``` 
+
 ## Examples
 
 <details>
