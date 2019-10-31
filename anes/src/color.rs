@@ -105,8 +105,8 @@ sequence! {
     /// ```
     struct SetForegroundColor(Color) =>
     |this, f| match this.0 {
-        Color::Default => write!(f, csi!("39m")),
-        _ => write!(f, csi!("38;{}m"), this.0),
+        Color::Default => write!(f, sgr!("39")),
+        _ => write!(f, sgr!("38;{}"), this.0),
     }
 }
 
@@ -125,8 +125,8 @@ sequence! {
     /// ```
     struct SetBackgroundColor(Color) =>
     |this, f| match this.0 {
-        Color::Default => write!(f, csi!("49m")),
-        _ => write!(f, csi!("48;{}m"), this.0),
+        Color::Default => write!(f, sgr!("49")),
+        _ => write!(f, sgr!("48;{}"), this.0),
     }
 }
 
