@@ -6,7 +6,7 @@ use std::fmt;
 ///
 /// * [`SetBackgroundColor`](struct.SetBackgroundColor.html)
 /// * [`SetForegroundColor`](struct.SetForegroundColor.html)
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
 pub enum Color {
     /// Resets the color to the default one.
     Default,

@@ -102,7 +102,7 @@ macro_rules! sequence {
         struct $name:ident => $value:expr
     ) => {
         $(#[$meta])*
-        #[derive(Copy, Clone, Debug)]
+        #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
         pub struct $name;
 
         impl ::std::fmt::Display for $name {
@@ -123,6 +123,7 @@ macro_rules! sequence {
         }
     ) => {
         $(#[$meta])*
+        #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
         pub enum $name {
             $(
                 $(#[$variant_meta])*
@@ -151,7 +152,7 @@ macro_rules! sequence {
         $write:expr
     ) => {
         $(#[$meta])*
-        #[derive(Copy, Clone, Debug)]
+        #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
         pub struct $type($(pub $fields),*);
 
         impl ::std::fmt::Display for $type {
