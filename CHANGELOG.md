@@ -1,3 +1,7 @@
+# master
+
+* All sequences and related structures auto derive `Copy`, `Clone`, `Debug`, `Hash`, `Eq`, `PartialEq`
+
 # Version 0.1.3
 
 * New color related sequences
