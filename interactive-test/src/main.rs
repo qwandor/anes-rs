@@ -54,7 +54,12 @@ where
         };
     }
 
-    execute!(w, anes::ShowCursor, anes::SwitchBufferToNormal)?;
+    execute!(
+        w,
+        anes::ResetAttributes,
+        anes::ShowCursor,
+        anes::SwitchBufferToNormal
+    )?;
     Ok(())
 }
 
