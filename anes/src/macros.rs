@@ -299,17 +299,22 @@ mod tests {
     use std::io::{Error, ErrorKind, Write};
 
     #[test]
-    fn test_csi() {
+    fn csi() {
         assert_eq!(csi!("foo"), "\x1B[foo");
     }
 
     #[test]
-    fn test_esc() {
+    fn esc() {
         assert_eq!(esc!("bar"), "\x1Bbar");
     }
 
     #[test]
-    fn test_static_struct_sequence() {
+    fn sgr() {
+        assert_eq!(sgr!("bar"), "\x1B[barm");
+    }
+
+    #[test]
+    fn static_struct_sequence() {
         sequence!(
             struct TestSeq => csi!("foo")
         );
@@ -318,7 +323,7 @@ mod tests {
     }
 
     #[test]
-    fn test_static_enum_sequence() {
+    fn static_enum_sequence() {
         sequence!(
             enum TestSeq {
                 Foo => csi!("foo"),
@@ -331,7 +336,7 @@ mod tests {
     }
 
     #[test]
-    fn test_dynamic_struct_sequence() {
+    fn dynamic_struct_sequence() {
         sequence!(
             struct TestSeq(u16) =>
             |this, f| write!(f, csi!("foo{}bar"), this.0)

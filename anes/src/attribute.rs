@@ -104,7 +104,7 @@ sequence!(
 
 #[cfg(test)]
 test_sequences!(
-    test_set_attribute(
+    set_attribute(
         SetAttribute(Attribute::Bold) => "\x1B[1m",
         SetAttribute(Attribute::Faint) => "\x1B[2m",
         SetAttribute(Attribute::Normal) => "\x1B[22m",
@@ -127,7 +127,7 @@ test_sequences!(
         SetAttribute(Attribute::Crossed) => "\x1B[9m",
         SetAttribute(Attribute::CrossedOff) => "\x1B[29m",
     ),
-    test_reset_attributes(
+    reset_attributes(
         ResetAttributes => "\x1B[0m",
     )
 );

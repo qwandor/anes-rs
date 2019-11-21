@@ -289,46 +289,46 @@ sequence!(
 
 #[cfg(test)]
 test_sequences!(
-    test_save_cursor_position(
+    save_cursor_position(
         SaveCursorPosition => "\x1B7",
     ),
-    test_restore_cursor_position(
+    restore_cursor_position(
         RestoreCursorPosition => "\x1B8",
     ),
-    test_hide_cursor(
+    hide_cursor(
         HideCursor => "\x1B[?25l",
     ),
-    test_show_cursor(
+    show_cursor(
         ShowCursor => "\x1B[?25h",
     ),
-    test_disable_cursor_blinking(
+    disable_cursor_blinking(
         DisableCursorBlinking => "\x1B[?12l",
     ),
-    test_enable_cursor_blinking(
+    enable_cursor_blinking(
         EnableCursorBlinking => "\x1B[?12h",
     ),
-    test_move_cursor_up(
+    move_cursor_up(
         MoveCursorUp(10) => "\x1B[10A",
     ),
-    test_move_cursor_down(
+    move_cursor_down(
         MoveCursorDown(10) => "\x1B[10B",
     ),
-    test_move_cursor_right(
+    move_cursor_right(
         MoveCursorRight(10) => "\x1B[10C",
     ),
-    test_move_cursor_left(
+    move_cursor_left(
         MoveCursorLeft(10) => "\x1B[10D",
     ),
-    test_move_cursor_to(
+    move_cursor_to(
         MoveCursorTo(5, 10) => "\x1B[10;5H",
     ),
-    test_move_cursor_to_next_line(
+    move_cursor_to_next_line(
         MoveCursorToNextLine(5) => "\x1B[5E",
     ),
-    test_move_cursor_to_previous_line(
+    move_cursor_to_previous_line(
         MoveCursorToPreviousLine(5) => "\x1B[5F",
     ),
-    test_move_cursor_to_column(
+    move_cursor_to_column(
         MoveCursorToColumn(1) => "\x1B[1G",
     ),
 );

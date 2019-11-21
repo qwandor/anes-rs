@@ -144,7 +144,7 @@ sequence! {
 
 #[cfg(test)]
 test_sequences!(
-    test_set_foreground_color(
+    set_foreground_color(
         SetForegroundColor(Color::Default) => "\x1B[39m",
         SetForegroundColor(Color::Black) => "\x1B[38;5;0m",
         SetForegroundColor(Color::DarkRed) => "\x1B[38;5;1m",
@@ -165,7 +165,7 @@ test_sequences!(
         SetForegroundColor(Color::Ansi(200)) => "\x1B[38;5;200m",
         SetForegroundColor(Color::Rgb(1, 2, 3)) => "\x1B[38;2;1;2;3m",
     ),
-    test_set_background_color(
+    set_background_color(
         SetBackgroundColor(Color::Default) => "\x1B[49m",
         SetBackgroundColor(Color::Black) => "\x1B[48;5;0m",
         SetBackgroundColor(Color::DarkRed) => "\x1B[48;5;1m",

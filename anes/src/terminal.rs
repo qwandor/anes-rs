@@ -19,7 +19,7 @@ sequence!(
 
 #[cfg(test)]
 test_sequences!(
-    test_resize_text_area(
+    resize_text_area(
         ResizeTextArea(80, 25) => "\x1B[8;25;80t",
         ResizeTextArea(1, 1) => "\x1B[8;1;1t",
     ),
