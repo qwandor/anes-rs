@@ -131,7 +131,7 @@ mod tests {
     }
 
     #[test]
-    fn char_with_alt_modifier() {
+    fn esc_char() {
         test_sequences!(
             b"\x1Ba",
             Sequence::Key(KeyCode::Char('a'), KeyModifiers::ALT),
@@ -175,7 +175,27 @@ mod tests {
     }
 
     #[test]
-    fn xterm_mouse() {
+    fn csi_special_keys() {
+        test_sequences!(
+            b"\x1B[D",
+            Sequence::Key(KeyCode::Left, KeyModifiers::empty()),
+            b"\x1B[C",
+            Sequence::Key(KeyCode::Right, KeyModifiers::empty()),
+            b"\x1B[A",
+            Sequence::Key(KeyCode::Up, KeyModifiers::empty()),
+            b"\x1B[B",
+            Sequence::Key(KeyCode::Down, KeyModifiers::empty()),
+            b"\x1B[H",
+            Sequence::Key(KeyCode::Home, KeyModifiers::empty()),
+            b"\x1B[F",
+            Sequence::Key(KeyCode::End, KeyModifiers::empty()),
+            b"\x1B[Z",
+            Sequence::Key(KeyCode::BackTab, KeyModifiers::empty()),
+        );
+    }
+
+    #[test]
+    fn csi_xterm_mouse() {
         test_sequences!(
             b"\x1B[<0;20;10;M",
             Sequence::Mouse(Mouse::Down(
