@@ -1,5 +1,7 @@
 use std::io::Write;
 
+use anes::queue;
+
 use crate::Result;
 
 const ATTRIBUTES: [(anes::Attribute, anes::Attribute); 8] = [
