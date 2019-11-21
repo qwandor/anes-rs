@@ -54,13 +54,16 @@ An example how to use the ANSI escape sequence:
 ```rust
 use std::io::{Result, Write};
 
-use anes;
+use anes::execute;
 
 fn main() -> Result<()> {
     let mut stdout = std::io::stdout();
-    write!(stdout, "{}", anes::SaveCursorPosition)?;
-    write!(stdout, "{}", anes::RestoreCursorPosition)?;
-    stdout.flush()?;
+    execute!(
+        &mut stdout,
+        anes::SaveCursorPosition,
+        anes::MoveCursorTo(10, 10),
+        anes::RestoreCursorPosition
+    )?;
     Ok(())
 }
 ```
