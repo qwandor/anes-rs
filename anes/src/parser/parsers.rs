@@ -34,9 +34,9 @@ pub(crate) fn parse_esc(
 
 pub(crate) fn parse_csi(
     parameters: &[i64],
-    ignored_parameters_count: usize,
-    intermediates: &[u8],
-    ignored_intermediates_count: usize,
+    _ignored_parameters_count: usize,
+    _intermediates: &[u8],
+    _ignored_intermediates_count: usize,
     ch: char,
 ) -> Option<Sequence> {
     let seq = match ch {
@@ -49,13 +49,7 @@ pub(crate) fn parse_csi(
         'Z' => Sequence::Key(KeyCode::BackTab, KeyModifiers::empty()),
         _ if !parameters.is_empty() => {
             if parameters[0] == b'<' as i64 {
-                return parse_csi_xterm_mouse(
-                    parameters,
-                    ignored_parameters_count,
-                    intermediates,
-                    ignored_intermediates_count,
-                    ch,
-                );
+                return parse_csi_xterm_mouse(parameters, ch);
             }
             return None;
         }
@@ -65,13 +59,7 @@ pub(crate) fn parse_csi(
     Some(seq)
 }
 
-pub(crate) fn parse_csi_xterm_mouse(
-    parameters: &[i64],
-    _ignored_parameters_count: usize,
-    _intermediates: &[u8],
-    _ignored_intermediates_count: usize,
-    ch: char,
-) -> Option<Sequence> {
+pub(crate) fn parse_csi_xterm_mouse(parameters: &[i64], ch: char) -> Option<Sequence> {
     // ESC [ < Cb ; Cx ; Cy (;) (M or m)
 
     if parameters.len() < 4 {
