@@ -49,7 +49,7 @@ mod macros;
 
 #[cfg(feature = "parser")]
 pub use self::parser::{
-    types::{KeyCode, KeyModifiers, Sequence},
+    types::{KeyCode, KeyModifiers, Mouse, MouseButton, Sequence},
     Parser,
 };
 
