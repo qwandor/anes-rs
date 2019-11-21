@@ -28,19 +28,18 @@
 //! assert_eq!(&string, "\x1B7");
 //! ```
 //!
-//! Use the sequence on the standard output:
+//! Execute the sequence on the standard output:
 //!
 //! ```rust
 //! use std::io::{Result, Write};
 //!
+//! use anes::execute;
+//!
 //! fn main() -> Result<()> {
 //!     let mut stdout = std::io::stdout();
-//!     write!(stdout, "{}", anes::ResetAttributes)?;
-//!     stdout.flush()?;
-//!     Ok(())
+//!     execute!(&mut stdout, anes::ResetAttributes)
 //! }
 //! ```
-
 #![warn(rust_2018_idioms)]
 #![deny(unused_imports, unused_must_use)]
 

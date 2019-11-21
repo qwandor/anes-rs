@@ -181,6 +181,92 @@ macro_rules! sequence {
     };
 }
 
+/// Queues ANSI escape sequence(s).
+///
+/// What does queue mean exactly? All sequences are queued with the
+/// `write!($dst, "{}", $sequence)` macro without calling the
+/// [`flush`](https://doc.rust-lang.org/std/io/trait.Write.html#tymethod.flush) method.
+///
+/// Check the [`execute!`](macro.execute.html) macro if you'd like execute them
+/// immediately (call the `flush` method after all sequences were queued).
+///
+/// # Examples
+///
+/// ```no_run
+/// use std::io::{Result, Write};
+///
+/// use anes::queue;
+///
+/// fn main() -> Result<()> {
+///     let mut stdout = std::io::stdout();
+///     queue!(
+///         &mut stdout,
+///         anes::SaveCursorPosition,
+///         anes::MoveCursorTo(10, 10)
+///     )?;
+///
+///     queue!(&mut stdout, anes::RestoreCursorPosition,)?;
+///
+///     // ANSI sequences are not executed until you flush it!
+///     stdout.flush()
+/// }
+/// ```
+#[macro_export]
+macro_rules! queue {
+    ($dst:expr, $($sequence:expr),* $(,)?) => {{
+        let mut error = None;
+
+        $(
+            if let Err(e) = write!($dst, "{}", $sequence) {
+                error = Some(e);
+            }
+        )*
+
+        if let Some(error) = error {
+            Err(error)
+        } else {
+            Ok(())
+        }
+    }}
+}
+
+/// Executes ANSI escape sequence(s).
+///
+/// What does execute mean exactly? All sequences are queued with the
+/// `write!($dst, "{}", $sequence)` macro and then the
+/// [`flush`](https://doc.rust-lang.org/std/io/trait.Write.html#tymethod.flush) method
+/// is called.
+///
+/// Check the [`queue!`](macro.queue.html) macro if you'd like queue sequences
+/// and execute them later.
+///
+/// ```no_run
+/// use std::io::{Result, Write};
+///
+/// use anes::execute;
+///
+/// fn main() -> Result<()> {
+///     let mut stdout = std::io::stdout();
+///     execute!(
+///         &mut stdout,
+///         anes::SaveCursorPosition,
+///         anes::MoveCursorTo(10, 10),
+///         anes::RestoreCursorPosition
+///     )?;
+///     Ok(())
+/// }
+/// ```
+#[macro_export]
+macro_rules! execute {
+    ($dst:expr, $($sequence:expr),* $(,)?) => {{
+        if let Err(e) = $crate::queue!($dst, $($sequence),*) {
+            Err(e)
+        } else {
+            $dst.flush()
+        }
+    }}
+}
+
 #[cfg(test)]
 macro_rules! test_sequences {
     (
@@ -210,6 +296,8 @@ macro_rules! test_sequences {
 
 #[cfg(test)]
 mod tests {
+    use std::io::{Error, ErrorKind, Write};
+
     #[test]
     fn test_csi() {
         assert_eq!(csi!("foo"), "\x1B[foo");
@@ -250,5 +338,95 @@ mod tests {
         );
 
         assert_eq!(&format!("{}", TestSeq(10)), "\x1B[foo10bar");
+    }
+
+    #[test]
+    fn queue_allows_trailing_comma() {
+        let mut writer = Writer::default();
+
+        assert!(queue!(&mut writer, "foo",).is_ok());
+        assert_eq!(&writer.buffer, "foo");
+    }
+
+    #[test]
+    fn queue_writes_single_sequence() {
+        let mut writer = Writer::default();
+
+        assert!(queue!(&mut writer, "foo").is_ok());
+        assert_eq!(&writer.buffer, "foo");
+    }
+
+    #[test]
+    fn queue_writes_multiple_sequences() {
+        let mut writer = Writer::default();
+
+        assert!(queue!(&mut writer, "foo", "bar", "baz").is_ok());
+        assert_eq!(&writer.buffer, "foobarbaz");
+    }
+
+    #[test]
+    fn queue_does_not_flush() {
+        let mut writer = Writer::default();
+
+        assert!(queue!(&mut writer, "foo").is_ok());
+        assert!(!writer.flushed);
+        assert!(writer.flushed_buffer.is_empty());
+    }
+
+    #[test]
+    fn execute_allows_trailing_comma() {
+        let mut writer = Writer::default();
+
+        assert!(execute!(&mut writer, "foo",).is_ok());
+        assert_eq!(&writer.flushed_buffer, "foo");
+    }
+
+    #[test]
+    fn execute_writes_single_sequence() {
+        let mut writer = Writer::default();
+
+        assert!(execute!(&mut writer, "foo").is_ok());
+        assert_eq!(&writer.flushed_buffer, "foo");
+    }
+
+    #[test]
+    fn execute_writes_multiple_sequences() {
+        let mut writer = Writer::default();
+
+        assert!(execute!(&mut writer, "foo", "bar", "baz").is_ok());
+        assert_eq!(&writer.flushed_buffer, "foobarbaz");
+    }
+
+    #[test]
+    fn execute_does_flush() {
+        let mut writer = Writer::default();
+
+        assert!(execute!(&mut writer, "foo").is_ok());
+        assert!(writer.flushed);
+        assert_eq!(&writer.flushed_buffer, "foo");
+        assert!(writer.buffer.is_empty());
+    }
+
+    #[derive(Default)]
+    struct Writer {
+        buffer: String,
+        flushed_buffer: String,
+        flushed: bool,
+    }
+
+    impl Write for Writer {
+        fn write(&mut self, buf: &[u8]) -> Result<usize, Error> {
+            let s = std::str::from_utf8(buf).map_err(|_| ErrorKind::InvalidData)?;
+
+            self.buffer.push_str(s);
+            Ok(s.len())
+        }
+
+        fn flush(&mut self) -> Result<(), Error> {
+            self.flushed_buffer = self.buffer.clone();
+            self.buffer = String::new();
+            self.flushed = true;
+            Ok(())
+        }
     }
 }
