@@ -51,11 +51,17 @@ jobs:
           command: build
           args: --all
 
-      - name: Test all features
+      - name: Test default features
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --all --all-features -- --nocapture
+          args: --all -- --nocapture
+
+      - name: Test parser feature
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --all --features parser -- --nocapture
 
       - name: Test publishing (dry run)
         uses: actions-rs/cargo@v1
