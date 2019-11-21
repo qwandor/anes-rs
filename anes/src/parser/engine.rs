@@ -234,7 +234,7 @@ impl Engine {
             0x5B => self.set_state(State::CsiEntry),
 
             // Escape sequence final character
-            0x30..=0x7E => {
+            0x30..=0x5A | 0x5C..=0x7E => {
                 performer.dispatch_esc(
                     &self.intermediates[..self.intermediates_count],
                     self.ignored_intermediates_count,
@@ -297,8 +297,16 @@ impl Engine {
             // Ignore
             0x7F => {}
 
-            // Other bytes are considered as invalid -> cancel whatever we have
-            _ => self.set_state(State::Ground),
+            // Collect rest as parameters
+            _ => {
+                if self.parameters_count < MAX_PARAMETERS {
+                    self.parameters[self.parameters_count] = byte as i64;
+                    self.parameters_count += 1;
+                } else {
+                    self.ignored_parameters_count += 1;
+                }
+                self.parameter = DEFAULT_PARAMETER_VALUE;
+            }
         };
     }
 
@@ -452,18 +460,19 @@ impl Engine {
         self.utf8_points_count += 1;
 
         if self.utf8_points_count == self.utf8_points_expected_count {
-            match std::str::from_utf8(&self.utf8_points[..self.utf8_points_count])
+            if let Some(ch) = std::str::from_utf8(&self.utf8_points[..self.utf8_points_count])
                 .ok()
                 .and_then(|s| s.chars().next())
             {
-                Some(ch) => performer.dispatch_char(ch),
-                None => {}
-            };
+                performer.dispatch_char(ch);
+            }
             self.set_state(State::Ground);
         }
     }
 
     pub fn advance(&mut self, performer: &mut dyn Perform, byte: u8, more: bool) {
+        // eprintln!("advance: {:?} {} {}", self.state, byte, more);
+
         if self.handle_possible_esc(performer, byte, more) {
             return;
         }
@@ -591,14 +600,6 @@ mod tests {
         assert_eq!(performer.chars[0], 'm');
     }
 
-    pub fn advance(engine: &mut Engine, performer: &mut dyn Perform, bytes: &[u8], more: bool) {
-        let len = bytes.len();
-
-        for (i, byte) in bytes.iter().enumerate() {
-            engine.advance(performer, *byte, i < len - 1 || more);
-        }
-    }
-
     #[test]
     fn test_parse_utf8_character() {
         let mut engine = Engine::default();
@@ -624,6 +625,14 @@ mod tests {
         );
         assert_eq!(performer.chars.len(), 4);
         assert_eq!(performer.chars[3], '𐌼');
+    }
+
+    fn advance(engine: &mut Engine, performer: &mut dyn Perform, bytes: &[u8], more: bool) {
+        let len = bytes.len();
+
+        for (i, byte) in bytes.iter().enumerate() {
+            engine.advance(performer, *byte, i < len - 1 || more);
+        }
     }
 
     #[derive(Default)]

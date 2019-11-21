@@ -1,10 +1,10 @@
 use bitflags::bitflags;
 
-pub enum Event {
-    Key(KeyEvent),
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum Sequence {
+    Key(KeyCode, KeyModifiers),
+    Mouse(Mouse),
 }
-
-pub struct KeyEvent(pub KeyCode, pub KeyModifiers);
 
 bitflags! {
     pub struct KeyModifiers: u8 {
@@ -14,6 +14,7 @@ bitflags! {
     }
 }
 
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub enum KeyCode {
     Backspace,
     Enter,
@@ -33,4 +34,20 @@ pub enum KeyCode {
     Char(char),
     Null,
     Esc,
+}
+
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum Mouse {
+    Down(MouseButton, u16, u16, KeyModifiers),
+    Up(MouseButton, u16, u16, KeyModifiers),
+    Drag(MouseButton, u16, u16, KeyModifiers),
+    ScrollDown(u16, u16, KeyModifiers),
+    ScrollUp(u16, u16, KeyModifiers),
+}
+
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum MouseButton {
+    Left,
+    Right,
+    Middle,
 }
