@@ -43,13 +43,19 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --all -- -D warnings
+          args: --all --all-features -- -D warnings
 
-      - name: Test build
+      - name: Check default features
         uses: actions-rs/cargo@v1
         with:
-          command: build
+          command: check
           args: --all
+
+      - name: Check all features
+        uses: actions-rs/cargo@v1
+        with:
+          command: check
+          args: --all --all-features
 
       - name: Test default features
         uses: actions-rs/cargo@v1

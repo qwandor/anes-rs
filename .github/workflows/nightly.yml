@@ -29,18 +29,6 @@ jobs:
           override: true
           components: rustfmt, clippy
 
-      - name: Check formatting
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
-
-      - name: Lint the code
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --all -- -D warnings
-
       - name: Test default features
         uses: actions-rs/cargo@v1
         with:
