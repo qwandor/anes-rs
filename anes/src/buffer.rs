@@ -119,24 +119,24 @@ sequence!(
 
 #[cfg(test)]
 test_sequences!(
-    test_switch_buffer_to_alternate(
+    switch_buffer_to_alternate(
         SwitchBufferToAlternate => "\x1B[?1049h",
     ),
-    test_switch_buffer_to_main(
+    switch_buffer_to_main(
         SwitchBufferToNormal => "\x1B[?1049l",
     ),
-    test_scroll_buffer_up(
+    scroll_buffer_up(
         ScrollBufferUp(10) => "\x1B[10S",
     ),
-    test_scroll_buffer_down(
+    scroll_buffer_down(
         ScrollBufferDown(10) => "\x1B[10T",
     ),
-    test_clear_line(
+    clear_line(
         ClearLine::Right => "\x1B[K",
         ClearLine::Left => "\x1B[1K",
         ClearLine::All => "\x1B[2K",
     ),
-    test_clear_buffer(
+    clear_buffer(
         ClearBuffer::Below => "\x1B[J",
         ClearBuffer::Above => "\x1B[1J",
         ClearBuffer::All => "\x1B[2J",
