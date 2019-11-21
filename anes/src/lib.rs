@@ -43,7 +43,7 @@
 #![warn(rust_2018_idioms)]
 #![deny(unused_imports, unused_must_use)]
 
-pub use self::{
+pub use self::sequences::{
     attribute::{Attribute, ResetAttributes, SetAttribute},
     buffer::{
         ClearBuffer, ClearLine, ScrollBufferDown, ScrollBufferUp, SwitchBufferToAlternate,
@@ -63,8 +63,4 @@ pub use self::{
 #[macro_use]
 mod macros;
 
-mod attribute;
-mod buffer;
-mod color;
-mod cursor;
-mod terminal;
+mod sequences;
