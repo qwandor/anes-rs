@@ -43,6 +43,16 @@
 #![warn(rust_2018_idioms)]
 #![deny(unused_imports, unused_must_use)]
 
+// Keep it first to load all the macros before other modules.
+#[macro_use]
+mod macros;
+
+#[cfg(feature = "parser")]
+pub use self::parser::{
+    types::{Event, KeyCode, KeyEvent, KeyModifiers},
+    Parser,
+};
+
 pub use self::sequences::{
     attribute::{Attribute, ResetAttributes, SetAttribute},
     buffer::{
@@ -59,8 +69,6 @@ pub use self::sequences::{
     terminal::ResizeTextArea,
 };
 
-// Keep it first to load all the macros before other modules.
-#[macro_use]
-mod macros;
-
+#[cfg(feature = "parser")]
+mod parser;
 mod sequences;
