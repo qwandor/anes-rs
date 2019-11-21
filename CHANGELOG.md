@@ -1,3 +1,8 @@
+# master
+
+* Add `execute!` macro to execute ANSI escape sequences
+* Add `queue!` macro to queue ANSI escape sequences
+
 # Version 0.1.4
 
 * All sequences and related structures auto derive `Copy`, `Clone`, `Debug`, `Hash`, `Eq`, `PartialEq`
