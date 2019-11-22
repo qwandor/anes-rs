@@ -100,112 +100,53 @@ impl Perform for Performer {
 
 #[cfg(test)]
 mod tests {
-    use super::{
-        types::{KeyCode, KeyModifiers, Mouse, MouseButton, Sequence},
-        Parser,
-    };
+    use super::Parser;
 
-    macro_rules! test_sequence {
-        ($bytes:expr, $seq:expr) => {
-            let mut parser = Parser::default();
-
-            let len = $bytes.len();
-            for (i, byte) in $bytes.iter().enumerate() {
-                parser.advance(*byte, i < len - 1);
-            }
-
-            assert_eq!(parser.next(), Some($seq));
-        };
-    }
-
-    macro_rules! test_sequences {
-        (
-            $(
-                $bytes:expr, $seq:expr,
-            )*
-        ) => {
-            $(
-                test_sequence!($bytes, $seq);
-            )*
-        };
+    #[test]
+    fn dispatch_char() {
+        let mut parser = Parser::default();
+        parser.advance(b'a', false);
+        assert!(parser.next().is_some());
     }
 
     #[test]
-    fn esc_char() {
-        test_sequences!(
-            b"\x1Ba",
-            Sequence::Key(KeyCode::Char('a'), KeyModifiers::ALT),
-            b"\x1Bz",
-            Sequence::Key(KeyCode::Char('z'), KeyModifiers::ALT),
-            b"\x1B5",
-            Sequence::Key(KeyCode::Char('5'), KeyModifiers::ALT),
-        );
+    fn dispatch_esc_sequence() {
+        let mut parser = Parser::default();
+        parser.advance(b'\x1B', true);
+        assert!(parser.next().is_none());
+        parser.advance(b'a', false);
+        assert!(parser.next().is_some());
     }
 
     #[test]
-    fn esc_o_f1_to_f4() {
-        test_sequences!(
-            b"\x1BOP",
-            Sequence::Key(KeyCode::F(1), KeyModifiers::empty()),
-            b"\x1BOQ",
-            Sequence::Key(KeyCode::F(2), KeyModifiers::empty()),
-            b"\x1BOR",
-            Sequence::Key(KeyCode::F(3), KeyModifiers::empty()),
-            b"\x1BOS",
-            Sequence::Key(KeyCode::F(4), KeyModifiers::empty()),
-        );
+    fn does_not_dispatch_esc_sequence_with_upper_case_o() {
+        let mut parser = Parser::default();
+        parser.advance(b'\x1B', true);
+        assert!(parser.next().is_none());
+        parser.advance(b'O', true);
+        assert!(parser.next().is_none());
     }
 
     #[test]
-    fn single_byte() {
-        test_sequences!(
-            b"\r",
-            Sequence::Key(KeyCode::Enter, KeyModifiers::empty()),
-            b"\n",
-            Sequence::Key(KeyCode::Enter, KeyModifiers::empty()),
-            b"\t",
-            Sequence::Key(KeyCode::Tab, KeyModifiers::empty()),
-            b"\x7F",
-            Sequence::Key(KeyCode::BackTab, KeyModifiers::empty()),
-            b"\x1B",
-            Sequence::Key(KeyCode::Esc, KeyModifiers::empty()),
-            b"\0",
-            Sequence::Key(KeyCode::Null, KeyModifiers::empty()),
-        );
+    fn dispatch_esc_with_upper_case_o_followed_by_char_as_single_sequence() {
+        let mut parser = Parser::default();
+        parser.advance(b'\x1B', true);
+        assert!(parser.next().is_none());
+        parser.advance(b'O', true);
+        assert!(parser.next().is_none());
+        parser.advance(b'P', false);
+        assert!(parser.next().is_some());
+        assert!(parser.next().is_none());
     }
 
     #[test]
-    fn csi_special_keys() {
-        test_sequences!(
-            b"\x1B[D",
-            Sequence::Key(KeyCode::Left, KeyModifiers::empty()),
-            b"\x1B[C",
-            Sequence::Key(KeyCode::Right, KeyModifiers::empty()),
-            b"\x1B[A",
-            Sequence::Key(KeyCode::Up, KeyModifiers::empty()),
-            b"\x1B[B",
-            Sequence::Key(KeyCode::Down, KeyModifiers::empty()),
-            b"\x1B[H",
-            Sequence::Key(KeyCode::Home, KeyModifiers::empty()),
-            b"\x1B[F",
-            Sequence::Key(KeyCode::End, KeyModifiers::empty()),
-            b"\x1B[Z",
-            Sequence::Key(KeyCode::BackTab, KeyModifiers::empty()),
-        );
-    }
-
-    #[test]
-    fn csi_xterm_mouse() {
-        test_sequences!(
-            b"\x1B[<0;20;10;M",
-            Sequence::Mouse(Mouse::Down(
-                MouseButton::Left,
-                20,
-                10,
-                KeyModifiers::empty()
-            )),
-            b"\x1B[<0;20;10;m",
-            Sequence::Mouse(Mouse::Up(MouseButton::Left, 20, 10, KeyModifiers::empty())),
-        );
+    fn dispatch_csi_sequence() {
+        let mut parser = Parser::default();
+        parser.advance(b'\x1B', true);
+        assert!(parser.next().is_none());
+        parser.advance(b'[', true);
+        assert!(parser.next().is_none());
+        parser.advance(b'D', false);
+        assert!(parser.next().is_some());
     }
 }
