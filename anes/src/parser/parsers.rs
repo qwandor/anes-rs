@@ -42,19 +42,19 @@ pub(crate) fn parse_csi(
     match ch {
         'A' => Some(Sequence::Key(
             KeyCode::Up,
-            parse_arrow_key_modifiers(parameters.first().cloned()),
+            parse_csi_arrow_key_modifiers(parameters.first().cloned()),
         )),
         'B' => Some(Sequence::Key(
             KeyCode::Down,
-            parse_arrow_key_modifiers(parameters.first().cloned()),
+            parse_csi_arrow_key_modifiers(parameters.first().cloned()),
         )),
         'C' => Some(Sequence::Key(
             KeyCode::Right,
-            parse_arrow_key_modifiers(parameters.first().cloned()),
+            parse_csi_arrow_key_modifiers(parameters.first().cloned()),
         )),
         'D' => Some(Sequence::Key(
             KeyCode::Left,
-            parse_arrow_key_modifiers(parameters.first().cloned()),
+            parse_csi_arrow_key_modifiers(parameters.first().cloned()),
         )),
         'H' => Some(Sequence::Key(KeyCode::Home, KeyModifiers::empty())),
         'F' => Some(Sequence::Key(KeyCode::End, KeyModifiers::empty())),
@@ -68,7 +68,7 @@ pub(crate) fn parse_csi(
     }
 }
 
-fn parse_arrow_key_modifiers(parameter: Option<u64>) -> KeyModifiers {
+fn parse_csi_arrow_key_modifiers(parameter: Option<u64>) -> KeyModifiers {
     parse_key_modifiers(parameter.map(|x| x.saturating_sub(48)))
 }
 
