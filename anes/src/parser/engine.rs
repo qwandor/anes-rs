@@ -7,7 +7,6 @@
 // sense to add them to the vte crate.
 //
 const MAX_PARAMETERS: usize = 30;
-const MAX_INTERMEDIATES: usize = 10;
 const DEFAULT_PARAMETER_VALUE: u64 = 0;
 const MAX_UTF8_CODE_POINTS: usize = 4;
 
@@ -26,16 +25,9 @@ enum State {
 pub trait Perform {
     fn dispatch_char(&mut self, ch: char);
 
-    fn dispatch_esc(&mut self, intermediates: &[u8], ignored_intermediates_count: usize, ch: char);
+    fn dispatch_esc(&mut self, ch: char);
 
-    fn dispatch_csi(
-        &mut self,
-        parameters: &[u64],
-        ignored_parameters_count: usize,
-        intermediates: &[u8],
-        ignored_intermediates_count: usize,
-        ch: char,
-    );
+    fn dispatch_csi(&mut self, parameters: &[u64], ignored_count: usize, ch: char);
 }
 
 pub struct Engine {
@@ -43,9 +35,6 @@ pub struct Engine {
     parameters_count: usize,
     parameter: u64,
     ignored_parameters_count: usize,
-    intermediates: [u8; MAX_INTERMEDIATES],
-    intermediates_count: usize,
-    ignored_intermediates_count: usize,
     state: State,
     utf8_points: [u8; MAX_UTF8_CODE_POINTS],
     utf8_points_count: usize,
@@ -65,9 +54,6 @@ impl Engine {
             parameters_count: 0,
             parameter: DEFAULT_PARAMETER_VALUE,
             ignored_parameters_count: 0,
-            intermediates: [0; MAX_INTERMEDIATES],
-            intermediates_count: 0,
-            ignored_intermediates_count: 0,
             state: State::Ground,
             utf8_points: [0; MAX_UTF8_CODE_POINTS],
             utf8_points_count: 0,
@@ -77,16 +63,10 @@ impl Engine {
 
     fn set_state(&mut self, state: State) {
         match state {
-            State::Escape => {
-                self.intermediates_count = 0;
-                self.ignored_intermediates_count = 0;
-            }
             State::CsiEntry => {
                 self.parameters_count = 0;
                 self.parameter = DEFAULT_PARAMETER_VALUE;
                 self.ignored_parameters_count = 0;
-                self.intermediates_count = 0;
-                self.ignored_intermediates_count = 0;
             }
             _ => {}
         }
@@ -183,8 +163,6 @@ impl Engine {
 
             // Intermediate bytes to collect
             0x20..=0x2F => {
-                self.intermediates[self.intermediates_count] = byte;
-                self.intermediates_count += 1;
                 self.set_state(State::EscapeIntermediate);
             }
 
@@ -194,11 +172,7 @@ impl Engine {
 
             // Escape sequence final character
             0x30..=0x4F | 0x51..=0x57 | 0x59 | 0x5A | 0x5C | 0x60..=0x7E => {
-                performer.dispatch_esc(
-                    &self.intermediates[..self.intermediates_count],
-                    self.ignored_intermediates_count,
-                    byte as char,
-                );
+                performer.dispatch_esc(byte as char);
                 self.set_state(State::Ground);
             }
 
@@ -221,13 +195,7 @@ impl Engine {
             0x1B => unreachable!(),
 
             // Intermediate bytes to collect
-            0x20..=0x2F => {
-                if self.intermediates_count < MAX_INTERMEDIATES {
-                    self.intermediates[self.intermediates_count] = byte;
-                } else {
-                    self.ignored_intermediates_count += 1;
-                }
-            }
+            0x20..=0x2F => {}
 
             // Escape followed by '[' (0x5B)
             //   -> CSI sequence start
@@ -235,11 +203,7 @@ impl Engine {
 
             // Escape sequence final character
             0x30..=0x5A | 0x5C..=0x7E => {
-                performer.dispatch_esc(
-                    &self.intermediates[..self.intermediates_count],
-                    self.ignored_intermediates_count,
-                    byte as char,
-                );
+                performer.dispatch_esc(byte as char);
                 self.set_state(State::Ground);
             }
 
@@ -282,8 +246,6 @@ impl Engine {
                 performer.dispatch_csi(
                     &self.parameters[..self.parameters_count],
                     self.ignored_parameters_count,
-                    &self.intermediates[..self.intermediates_count],
-                    self.ignored_intermediates_count,
                     byte as char,
                 );
 
@@ -367,8 +329,6 @@ impl Engine {
                 performer.dispatch_csi(
                     &self.parameters[..self.parameters_count],
                     self.ignored_parameters_count,
-                    &self.intermediates[..self.intermediates_count],
-                    self.ignored_intermediates_count,
                     byte as char,
                 );
 
@@ -385,8 +345,6 @@ impl Engine {
                 }
                 self.parameter = DEFAULT_PARAMETER_VALUE;
 
-                self.intermediates[self.intermediates_count] = byte;
-                self.intermediates_count += 1;
                 self.set_state(State::CsiIntermediate);
             }
 
@@ -412,14 +370,7 @@ impl Engine {
             0x1B => unreachable!(),
 
             // Intermediates to collect
-            0x20..=0x2F => {
-                if self.intermediates_count < MAX_INTERMEDIATES {
-                    self.intermediates[self.intermediates_count] = byte;
-                    self.intermediates_count += 1;
-                } else {
-                    self.ignored_intermediates_count += 1;
-                }
-            }
+            0x20..=0x2F => {}
 
             // CSI sequence final character
             //   -> dispatch CSI sequence
@@ -427,8 +378,6 @@ impl Engine {
                 performer.dispatch_csi(
                     &self.parameters[..self.parameters_count],
                     self.ignored_parameters_count,
-                    &self.intermediates[..self.intermediates_count],
-                    self.ignored_intermediates_count,
                     byte as char,
                 );
 
@@ -521,16 +470,10 @@ mod tests {
         let input = b"\x1B0\x1B~";
         advance(&mut engine, &mut performer, input, false);
 
-        assert_eq!(performer.ignored_intermediates_count.len(), 2);
-        assert_eq!(performer.intermediates.len(), 2);
         assert_eq!(performer.chars.len(), 2);
 
-        assert_eq!(performer.ignored_intermediates_count[0], 0);
-        assert!(performer.intermediates[0].is_empty());
         assert_eq!(performer.chars[0], '0');
 
-        assert_eq!(performer.ignored_intermediates_count[1], 0);
-        assert!(performer.intermediates[1].is_empty());
         assert_eq!(performer.chars[1], '~');
     }
 
@@ -645,92 +588,40 @@ mod tests {
             self.chars.push(ch);
         }
 
-        fn dispatch_esc(
-            &mut self,
-            _intermediates: &[u8],
-            _ignored_intermediates_count: usize,
-            _ch: char,
-        ) {
-        }
+        fn dispatch_esc(&mut self, _ch: char) {}
 
-        fn dispatch_csi(
-            &mut self,
-            _parameters: &[u64],
-            _ignored_parameters_count: usize,
-            _intermediates: &[u8],
-            _ignored_intermediates_count: usize,
-            _ch: char,
-        ) {
-        }
+        fn dispatch_csi(&mut self, _parameters: &[u64], _ignored_count: usize, _ch: char) {}
     }
 
     #[derive(Default)]
     struct CsiPerformer {
         parameters: Vec<Vec<u64>>,
-        intermediates: Vec<Vec<u8>>,
-        ignored_parameters_count: Vec<usize>,
-        ignored_intermediates_count: Vec<usize>,
         chars: Vec<char>,
     }
 
     impl Perform for CsiPerformer {
         fn dispatch_char(&mut self, _ch: char) {}
 
-        fn dispatch_esc(
-            &mut self,
-            _intermediates: &[u8],
-            _ignored_intermediates_count: usize,
-            _ch: char,
-        ) {
-        }
+        fn dispatch_esc(&mut self, _ch: char) {}
 
-        fn dispatch_csi(
-            &mut self,
-            parameters: &[u64],
-            ignored_parameters_count: usize,
-            intermediates: &[u8],
-            ignored_intermediates_count: usize,
-            ch: char,
-        ) {
+        fn dispatch_csi(&mut self, parameters: &[u64], _ignored_count: usize, ch: char) {
             self.parameters.push(parameters.to_vec());
-            self.intermediates.push(intermediates.to_vec());
-            self.ignored_parameters_count.push(ignored_parameters_count);
-            self.ignored_intermediates_count
-                .push(ignored_intermediates_count);
             self.chars.push(ch);
         }
     }
 
     #[derive(Default)]
     struct EscPerformer {
-        intermediates: Vec<Vec<u8>>,
-        ignored_intermediates_count: Vec<usize>,
         chars: Vec<char>,
     }
 
     impl Perform for EscPerformer {
         fn dispatch_char(&mut self, _ch: char) {}
 
-        fn dispatch_esc(
-            &mut self,
-            intermediates: &[u8],
-            ignored_intermediates_count: usize,
-            ch: char,
-        ) {
-            self.intermediates.push(intermediates.to_vec());
-            self.ignored_intermediates_count
-                .push(ignored_intermediates_count);
+        fn dispatch_esc(&mut self, ch: char) {
             self.chars.push(ch);
         }
 
-        fn dispatch_csi(
-            &mut self,
-            _parameters: &[u64],
-            _ignored_parameters_count: usize,
-            _intermediates: &[u8],
-            _ignored_intermediates_count: usize,
-            _ch: char,
-        ) {
-        }
+        fn dispatch_csi(&mut self, _parameters: &[u64], _ignored_count: usize, _ch: char) {}
     }
 }

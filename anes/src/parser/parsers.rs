@@ -22,23 +22,13 @@ pub(crate) fn parse_char(ch: char, esc_o: bool) -> Option<Sequence> {
     Some(Sequence::Key(code, KeyModifiers::empty()))
 }
 
-pub(crate) fn parse_esc(
-    _intermediates: &[u8],
-    _ignored_intermediates_count: usize,
-    ch: char,
-) -> Option<Sequence> {
+pub(crate) fn parse_esc(ch: char) -> Option<Sequence> {
     // EscO[P-S] is handled in the Performer, see parse_char & esc_o argument
     // No need to handle other cases here? It's just Alt+$char
     Some(Sequence::Key(KeyCode::Char(ch), KeyModifiers::ALT))
 }
 
-pub(crate) fn parse_csi(
-    parameters: &[u64],
-    _ignored_parameters_count: usize,
-    _intermediates: &[u8],
-    _ignored_intermediates_count: usize,
-    ch: char,
-) -> Option<Sequence> {
+pub(crate) fn parse_csi(parameters: &[u64], _ignored_count: usize, ch: char) -> Option<Sequence> {
     match ch {
         'A' => Some(Sequence::Key(
             KeyCode::Up,

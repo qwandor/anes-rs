@@ -51,12 +51,7 @@ impl Perform for Performer {
         self.esc_o = false;
     }
 
-    fn dispatch_esc(&mut self, intermediates: &[u8], ignored_intermediates_count: usize, ch: char) {
-        //        eprintln!(
-        //            "dispatch_esc: {:?} {} {}",
-        //            intermediates, ignored_intermediates_count, ch
-        //        );
-
+    fn dispatch_esc(&mut self, ch: char) {
         if ch == 'O' {
             // Exception
             //
@@ -65,32 +60,14 @@ impl Perform for Performer {
             self.esc_o = true;
         } else {
             self.esc_o = false;
-            if let Some(seq) = parsers::parse_esc(intermediates, ignored_intermediates_count, ch) {
+            if let Some(seq) = parsers::parse_esc(ch) {
                 self.seqs.push_back(seq);
             }
         }
     }
 
-    fn dispatch_csi(
-        &mut self,
-        parameters: &[u64],
-        ignored_parameters_count: usize,
-        intermediates: &[u8],
-        ignored_intermediates_count: usize,
-        ch: char,
-    ) {
-        //        eprintln!(
-        //            "dispatch_csi: {:?} {} {:?} {} {}",
-        //            parameters, ignored_parameters_count, intermediates, ignored_intermediates_count, ch
-        //        );
-
-        if let Some(seq) = parsers::parse_csi(
-            parameters,
-            ignored_parameters_count,
-            intermediates,
-            ignored_intermediates_count,
-            ch,
-        ) {
+    fn dispatch_csi(&mut self, parameters: &[u64], ignored_count: usize, ch: char) {
+        if let Some(seq) = parsers::parse_csi(parameters, ignored_count, ch) {
             self.seqs.push_back(seq);
         }
 
