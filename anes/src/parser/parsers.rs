@@ -60,7 +60,9 @@ pub(crate) fn parse_csi(
         'F' => Some(Sequence::Key(KeyCode::End, KeyModifiers::empty())),
         'Z' => Some(Sequence::Key(KeyCode::BackTab, KeyModifiers::empty())),
         'R' => parse_csi_cursor_position(parameters),
-        'M' | 'm' => parse_csi_xterm_mouse(parameters, ch),
+        'm' => parse_csi_xterm_mouse(parameters, ch),
+        'M' if parameters.first() == Some(&0x3C) => parse_csi_xterm_mouse(parameters, ch),
+        'M' => parse_csi_rxvt_mouse(parameters),
         '~' => parse_csi_tilde_key_code(parameters),
         _ => None,
     }
@@ -183,6 +185,58 @@ pub(crate) fn parse_csi_xterm_mouse(parameters: &[u64], ch: char) -> Option<Sequ
             (2, true, _) => Mouse::Up(MouseButton::Right, cx, cy, modifiers),
             (2, false, false) => Mouse::Down(MouseButton::Right, cx, cy, modifiers),
             (2, false, true) => Mouse::Drag(MouseButton::Right, cx, cy, modifiers),
+            _ => return None,
+        }
+    };
+
+    Some(Sequence::Mouse(mouse))
+}
+
+pub(crate) fn parse_csi_rxvt_mouse(parameters: &[u64]) -> Option<Sequence> {
+    // ESC [ Cb ; Cx ; Cy ; M
+
+    if parameters.len() < 3 {
+        return None;
+    }
+
+    let cb = parameters[0];
+    let cx = parameters[1] as u16;
+    let cy = parameters[2] as u16;
+
+    let mut modifiers = KeyModifiers::empty();
+
+    if cb & 0b0000_0100 == 0b0000_0100 {
+        modifiers |= KeyModifiers::SHIFT;
+    }
+
+    if cb & 0b0000_1000 == 0b0000_1000 {
+        modifiers |= KeyModifiers::ALT;
+    }
+
+    if cb & 0b0001_0000 == 0b0001_0000 {
+        modifiers |= KeyModifiers::CONTROL;
+    }
+
+    let mouse = if cb & 0b0110_0000 == 0b0110_0000 {
+        if cb & 0b0000_0001 == 0b0000_0001 {
+            Mouse::ScrollDown(cx, cy, modifiers)
+        } else {
+            Mouse::ScrollUp(cx, cy, modifiers)
+        }
+    } else {
+        let drag = cb & 0b0100_0000 == 0b0100_0000;
+
+        match (cb & 0b0000_0011, drag) {
+            (0b0000_0000, false) => Mouse::Down(MouseButton::Left, cx, cy, modifiers),
+            (0b0000_0010, false) => Mouse::Down(MouseButton::Right, cx, cy, modifiers),
+            (0b0000_0001, false) => Mouse::Down(MouseButton::Middle, cx, cy, modifiers),
+
+            (0b0000_0000, true) => Mouse::Drag(MouseButton::Left, cx, cy, modifiers),
+            (0b0000_0010, true) => Mouse::Drag(MouseButton::Right, cx, cy, modifiers),
+            (0b0000_0001, true) => Mouse::Drag(MouseButton::Middle, cx, cy, modifiers),
+
+            (0b0000_0011, false) => Mouse::Up(MouseButton::Left, cx, cy, modifiers),
+
             _ => return None,
         }
     };
