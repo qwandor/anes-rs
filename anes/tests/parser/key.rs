@@ -3,6 +3,20 @@ use anes::{KeyCode, KeyModifiers, Sequence};
 use crate::test_sequences;
 
 #[test]
+fn esc_o_f_keys() {
+    test_sequences!(
+        b"\x1BOP",
+        Sequence::Key(KeyCode::F(1), KeyModifiers::empty()),
+        b"\x1BOQ",
+        Sequence::Key(KeyCode::F(2), KeyModifiers::empty()),
+        b"\x1BOR",
+        Sequence::Key(KeyCode::F(3), KeyModifiers::empty()),
+        b"\x1BOS",
+        Sequence::Key(KeyCode::F(4), KeyModifiers::empty()),
+    );
+}
+
+#[test]
 fn csi_key_codes() {
     test_sequences!(
         b"\x1B[A",
