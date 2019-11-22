@@ -33,7 +33,7 @@ pub(crate) fn parse_esc(
 }
 
 pub(crate) fn parse_csi(
-    parameters: &[i64],
+    parameters: &[u64],
     _ignored_parameters_count: usize,
     _intermediates: &[u8],
     _ignored_intermediates_count: usize,
@@ -59,7 +59,7 @@ pub(crate) fn parse_csi(
     Some(seq)
 }
 
-pub(crate) fn parse_csi_xterm_mouse(parameters: &[i64], ch: char) -> Option<Sequence> {
+pub(crate) fn parse_csi_xterm_mouse(parameters: &[u64], ch: char) -> Option<Sequence> {
     // ESC [ < Cb ; Cx ; Cy (;) (M or m)
 
     if parameters.len() < 4 {

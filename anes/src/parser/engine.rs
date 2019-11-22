@@ -8,7 +8,7 @@
 //
 const MAX_PARAMETERS: usize = 30;
 const MAX_INTERMEDIATES: usize = 10;
-const DEFAULT_PARAMETER_VALUE: i64 = 0;
+const DEFAULT_PARAMETER_VALUE: u64 = 0;
 const MAX_UTF8_CODE_POINTS: usize = 4;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
@@ -30,7 +30,7 @@ pub trait Perform {
 
     fn dispatch_csi(
         &mut self,
-        parameters: &[i64],
+        parameters: &[u64],
         ignored_parameters_count: usize,
         intermediates: &[u8],
         ignored_intermediates_count: usize,
@@ -39,9 +39,9 @@ pub trait Perform {
 }
 
 pub struct Engine {
-    parameters: [i64; MAX_PARAMETERS],
+    parameters: [u64; MAX_PARAMETERS],
     parameters_count: usize,
-    parameter: i64,
+    parameter: u64,
     ignored_parameters_count: usize,
     intermediates: [u8; MAX_INTERMEDIATES],
     intermediates_count: usize,
@@ -270,7 +270,7 @@ impl Engine {
 
             // '0' ..= '9' = parameter value
             0x30..=0x39 => {
-                self.parameter = (byte as i64) - 0x30;
+                self.parameter = (byte as u64) - 0x30;
                 self.set_state(State::CsiParameter);
             }
 
@@ -300,7 +300,7 @@ impl Engine {
             // Collect rest as parameters
             _ => {
                 if self.parameters_count < MAX_PARAMETERS {
-                    self.parameters[self.parameters_count] = byte as i64;
+                    self.parameters[self.parameters_count] = byte as u64;
                     self.parameters_count += 1;
                 } else {
                     self.ignored_parameters_count += 1;
@@ -339,7 +339,7 @@ impl Engine {
             // '0' ..= '9' = parameter value
             0x30..=0x39 => {
                 self.parameter = self.parameter.saturating_mul(10);
-                self.parameter = self.parameter.saturating_add((byte as i64) - 0x30);
+                self.parameter = self.parameter.saturating_add((byte as u64) - 0x30);
             }
 
             // Semicolon = parameter delimiter
@@ -655,7 +655,7 @@ mod tests {
 
         fn dispatch_csi(
             &mut self,
-            _parameters: &[i64],
+            _parameters: &[u64],
             _ignored_parameters_count: usize,
             _intermediates: &[u8],
             _ignored_intermediates_count: usize,
@@ -666,7 +666,7 @@ mod tests {
 
     #[derive(Default)]
     struct CsiPerformer {
-        parameters: Vec<Vec<i64>>,
+        parameters: Vec<Vec<u64>>,
         intermediates: Vec<Vec<u8>>,
         ignored_parameters_count: Vec<usize>,
         ignored_intermediates_count: Vec<usize>,
@@ -686,7 +686,7 @@ mod tests {
 
         fn dispatch_csi(
             &mut self,
-            parameters: &[i64],
+            parameters: &[u64],
             ignored_parameters_count: usize,
             intermediates: &[u8],
             ignored_intermediates_count: usize,
@@ -725,7 +725,7 @@ mod tests {
 
         fn dispatch_csi(
             &mut self,
-            _parameters: &[i64],
+            _parameters: &[u64],
             _ignored_parameters_count: usize,
             _intermediates: &[u8],
             _ignored_intermediates_count: usize,

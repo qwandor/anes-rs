@@ -73,7 +73,7 @@ impl Perform for Performer {
 
     fn dispatch_csi(
         &mut self,
-        parameters: &[i64],
+        parameters: &[u64],
         ignored_parameters_count: usize,
         intermediates: &[u8],
         ignored_intermediates_count: usize,
