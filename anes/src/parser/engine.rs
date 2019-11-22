@@ -62,13 +62,10 @@ impl Engine {
     }
 
     fn set_state(&mut self, state: State) {
-        match state {
-            State::CsiEntry => {
-                self.parameters_count = 0;
-                self.parameter = DEFAULT_PARAMETER_VALUE;
-                self.ignored_parameters_count = 0;
-            }
-            _ => {}
+        if let State::CsiEntry = state {
+            self.parameters_count = 0;
+            self.parameter = DEFAULT_PARAMETER_VALUE;
+            self.ignored_parameters_count = 0;
         }
         self.state = state;
     }
