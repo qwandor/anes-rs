@@ -282,9 +282,24 @@ sequence!(
     /// // Move cursor to the 10th column (same row)
     /// write!(stdout, "{}", MoveCursorToColumn(10));
     /// ```
-    /// 
     struct MoveCursorToColumn(u16) =>
     |this, f| write!(f, csi!("{}G"), this.0)
+);
+
+// TODO Enhance example with Parser to show how to retrieve it
+sequence!(
+    /// Asks for the current cursor position.
+    /// 
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::io::{stdout, Write};
+    /// use anes::ReportCursorPosition;
+    ///
+    /// let mut stdout = stdout();
+    /// write!(stdout, "{}", ReportCursorPosition);
+    /// ```
+    struct ReportCursorPosition => csi!("6n")
 );
 
 #[cfg(test)]
@@ -331,4 +346,7 @@ test_sequences!(
     move_cursor_to_column(
         MoveCursorToColumn(1) => "\x1B[1G",
     ),
+    report_cursor_position(
+        ReportCursorPosition => "\x1B[6n",
+    )
 );

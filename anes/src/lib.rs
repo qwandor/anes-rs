@@ -63,8 +63,8 @@ pub use self::sequences::{
     cursor::{
         DisableCursorBlinking, EnableCursorBlinking, HideCursor, MoveCursorDown, MoveCursorLeft,
         MoveCursorRight, MoveCursorTo, MoveCursorToColumn, MoveCursorToNextLine,
-        MoveCursorToPreviousLine, MoveCursorUp, RestoreCursorPosition, SaveCursorPosition,
-        ShowCursor,
+        MoveCursorToPreviousLine, MoveCursorUp, ReportCursorPosition, RestoreCursorPosition,
+        SaveCursorPosition, ShowCursor,
     },
     terminal::ResizeTextArea,
 };

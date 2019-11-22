@@ -1,3 +1,7 @@
+# master
+
+* Add `ReportCursorPosition` sequence
+
 # Version 0.1.5
 
 * Add `execute!` macro to execute ANSI escape sequences
