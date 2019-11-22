@@ -39,24 +39,82 @@ pub(crate) fn parse_csi(
     _ignored_intermediates_count: usize,
     ch: char,
 ) -> Option<Sequence> {
-    let seq = match ch {
-        'D' => Sequence::Key(KeyCode::Left, KeyModifiers::empty()),
-        'C' => Sequence::Key(KeyCode::Right, KeyModifiers::empty()),
-        'A' => Sequence::Key(KeyCode::Up, KeyModifiers::empty()),
-        'B' => Sequence::Key(KeyCode::Down, KeyModifiers::empty()),
-        'H' => Sequence::Key(KeyCode::Home, KeyModifiers::empty()),
-        'F' => Sequence::Key(KeyCode::End, KeyModifiers::empty()),
-        'Z' => Sequence::Key(KeyCode::BackTab, KeyModifiers::empty()),
-        _ if !parameters.is_empty() => {
-            if parameters[0] == b'<' as i64 {
-                return parse_csi_xterm_mouse(parameters, ch);
+    match ch {
+        'D' => Some(Sequence::Key(KeyCode::Left, KeyModifiers::empty())),
+        'C' => Some(Sequence::Key(KeyCode::Right, KeyModifiers::empty())),
+        'A' => Some(Sequence::Key(KeyCode::Up, KeyModifiers::empty())),
+        'B' => Some(Sequence::Key(KeyCode::Down, KeyModifiers::empty())),
+        'H' => Some(Sequence::Key(KeyCode::Home, KeyModifiers::empty())),
+        'F' => Some(Sequence::Key(KeyCode::End, KeyModifiers::empty())),
+        'Z' => Some(Sequence::Key(KeyCode::BackTab, KeyModifiers::empty())),
+        'R' => parse_csi_cursor_position(parameters),
+        'M' | 'm' => parse_csi_xterm_mouse(parameters, ch),
+        '~' => parse_csi_tilde_key_code(parameters),
+        _ => None,
+    }
+}
+
+fn parse_key_modifiers(parameter: Option<&u64>) -> KeyModifiers {
+    if let Some(parameter) = parameter {
+        match parameter {
+            2 => KeyModifiers::SHIFT,
+            3 => KeyModifiers::ALT,
+            4 => KeyModifiers::SHIFT | KeyModifiers::ALT,
+            5 => KeyModifiers::CONTROL,
+            6 => KeyModifiers::SHIFT | KeyModifiers::CONTROL,
+            7 => KeyModifiers::ALT | KeyModifiers::CONTROL,
+            8 => KeyModifiers::SHIFT | KeyModifiers::ALT | KeyModifiers::CONTROL,
+            9 => KeyModifiers::META,
+            10 => KeyModifiers::META | KeyModifiers::SHIFT,
+            11 => KeyModifiers::META | KeyModifiers::ALT,
+            12 => KeyModifiers::META | KeyModifiers::SHIFT | KeyModifiers::ALT,
+            13 => KeyModifiers::META | KeyModifiers::CONTROL,
+            14 => KeyModifiers::META | KeyModifiers::SHIFT | KeyModifiers::CONTROL,
+            15 => KeyModifiers::META | KeyModifiers::ALT | KeyModifiers::CONTROL,
+            16 => {
+                KeyModifiers::META | KeyModifiers::SHIFT | KeyModifiers::ALT | KeyModifiers::CONTROL
             }
-            return None;
+            _ => KeyModifiers::empty(),
         }
+    } else {
+        KeyModifiers::empty()
+    }
+}
+
+pub(crate) fn parse_csi_tilde_key_code(parameters: &[u64]) -> Option<Sequence> {
+    if parameters.len() < 1 {
+        return None;
+    }
+
+    let modifiers = parse_key_modifiers(parameters.get(1));
+
+    let code = match parameters[0] {
+        1 | 7 => KeyCode::Home,
+        2 => KeyCode::Insert,
+        3 => KeyCode::Delete,
+        4 | 8 => KeyCode::End,
+        5 => KeyCode::PageUp,
+        6 => KeyCode::PageDown,
+        p @ 11..=15 => KeyCode::F(p as u8 - 10),
+        p @ 17..=21 => KeyCode::F(p as u8 - 11),
+        p @ 23..=24 => KeyCode::F(p as u8 - 12),
         _ => return None,
     };
 
-    Some(seq)
+    Some(Sequence::Key(code, modifiers))
+}
+
+pub(crate) fn parse_csi_cursor_position(parameters: &[u64]) -> Option<Sequence> {
+    // ESC [ Cy ; Cx R
+
+    if parameters.len() < 2 {
+        return None;
+    }
+
+    let y = parameters[0] as u16;
+    let x = parameters[1] as u16;
+
+    Some(Sequence::CursorPosition(x, y))
 }
 
 pub(crate) fn parse_csi_xterm_mouse(parameters: &[u64], ch: char) -> Option<Sequence> {

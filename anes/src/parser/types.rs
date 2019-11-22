@@ -4,6 +4,7 @@ use bitflags::bitflags;
 pub enum Sequence {
     Key(KeyCode, KeyModifiers),
     Mouse(Mouse),
+    CursorPosition(u16, u16),
 }
 
 bitflags! {
@@ -11,6 +12,7 @@ bitflags! {
         const SHIFT = 0b0000_0001;
         const CONTROL = 0b0000_0010;
         const ALT = 0b0000_0100;
+        const META = 0b0000_1000;
     }
 }
 
