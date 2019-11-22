@@ -40,10 +40,22 @@ pub(crate) fn parse_csi(
     ch: char,
 ) -> Option<Sequence> {
     match ch {
-        'D' => Some(Sequence::Key(KeyCode::Left, KeyModifiers::empty())),
-        'C' => Some(Sequence::Key(KeyCode::Right, KeyModifiers::empty())),
-        'A' => Some(Sequence::Key(KeyCode::Up, KeyModifiers::empty())),
-        'B' => Some(Sequence::Key(KeyCode::Down, KeyModifiers::empty())),
+        'A' => Some(Sequence::Key(
+            KeyCode::Up,
+            parse_arrow_key_modifiers(parameters.first().cloned()),
+        )),
+        'B' => Some(Sequence::Key(
+            KeyCode::Down,
+            parse_arrow_key_modifiers(parameters.first().cloned()),
+        )),
+        'C' => Some(Sequence::Key(
+            KeyCode::Right,
+            parse_arrow_key_modifiers(parameters.first().cloned()),
+        )),
+        'D' => Some(Sequence::Key(
+            KeyCode::Left,
+            parse_arrow_key_modifiers(parameters.first().cloned()),
+        )),
         'H' => Some(Sequence::Key(KeyCode::Home, KeyModifiers::empty())),
         'F' => Some(Sequence::Key(KeyCode::End, KeyModifiers::empty())),
         'Z' => Some(Sequence::Key(KeyCode::BackTab, KeyModifiers::empty())),
@@ -54,7 +66,11 @@ pub(crate) fn parse_csi(
     }
 }
 
-fn parse_key_modifiers(parameter: Option<&u64>) -> KeyModifiers {
+fn parse_arrow_key_modifiers(parameter: Option<u64>) -> KeyModifiers {
+    parse_key_modifiers(parameter.map(|x| x.saturating_sub(48)))
+}
+
+fn parse_key_modifiers(parameter: Option<u64>) -> KeyModifiers {
     if let Some(parameter) = parameter {
         match parameter {
             2 => KeyModifiers::SHIFT,
@@ -82,11 +98,11 @@ fn parse_key_modifiers(parameter: Option<&u64>) -> KeyModifiers {
 }
 
 pub(crate) fn parse_csi_tilde_key_code(parameters: &[u64]) -> Option<Sequence> {
-    if parameters.len() < 1 {
+    if parameters.is_empty() {
         return None;
     }
 
-    let modifiers = parse_key_modifiers(parameters.get(1));
+    let modifiers = parse_key_modifiers(parameters.get(1).cloned());
 
     let code = match parameters[0] {
         1 | 7 => KeyCode::Home,

@@ -23,6 +23,16 @@ fn csi_key_codes() {
 }
 
 #[test]
+fn csi_arrow_key_modifiers() {
+    test_sequences!(
+        b"\x1B[50A",
+        Sequence::Key(KeyCode::Up, KeyModifiers::SHIFT),
+        b"\x1B[53A",
+        Sequence::Key(KeyCode::Up, KeyModifiers::CONTROL),
+    );
+}
+
+#[test]
 fn csi_tilde_key_modifiers() {
     test_sequences!(
         b"\x1B[1~",
