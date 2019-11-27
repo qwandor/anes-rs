@@ -5,7 +5,7 @@ set -o pipefail
 
 OUT_DIR="fuzzer/out"
 
-if [ ! -d "$OUT_DIR"]; then
+if [ ! -d "$OUT_DIR" ]; then
   mkdir -p "$OUT_DIR"
 fi
 
