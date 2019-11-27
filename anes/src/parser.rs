@@ -14,6 +14,12 @@ pub struct Parser {
 }
 
 impl Parser {
+    pub fn advance_with_slice(&mut self, slice: &[u8], more: bool) {
+        for i in 0..slice.len() {
+            self.advance(slice[i], i < slice.len() - 1 || more);
+        }
+    }
+
     pub fn advance(&mut self, byte: u8, more: bool) {
         self.engine.advance(&mut self.performer, byte, more);
     }

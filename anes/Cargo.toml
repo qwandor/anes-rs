@@ -11,6 +11,9 @@ keywords = ["console", "terminal", "ansi"]
 exclude = ["target", "Cargo.lock"]
 readme = "README.md"
 
+[lib]
+bench = false
+
 [badges]
 maintenance = { status = "actively-developed" }
 
@@ -23,3 +26,11 @@ parser = ["bitflags"]
 
 [dependencies]
 bitflags = { version = "1.2", optional = true }
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "bench_main"
+harness = false
+required-features = ["parser"]
