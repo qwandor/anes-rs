@@ -11,9 +11,6 @@ exclude = ["target", "Cargo.lock"]
 readme = "README.md"
 publish = false
 
-[badges]
-maintenance = { status = "experimental" }
-
 [dependencies]
 anes = { path = "../anes" }
 crossterm = "0.12"
