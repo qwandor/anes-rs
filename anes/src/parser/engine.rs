@@ -218,8 +218,13 @@ impl Engine {
 
             // Semicolon = parameter delimiter
             0x3B => {
-                self.parameters[self.parameters_count] = self.parameter;
-                self.parameters_count += 1;
+                if self.parameters_count < MAX_PARAMETERS {
+                    self.parameters[self.parameters_count] = self.parameter;
+                    self.parameters_count += 1;
+                } else {
+                    self.ignored_parameters_count += 1;
+                }
+                self.parameter = DEFAULT_PARAMETER_VALUE;
                 self.set_state(State::CsiParameter);
             }
 
