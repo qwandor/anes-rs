@@ -158,28 +158,28 @@ pub(crate) fn parse_csi_xterm_mouse(parameters: &[u64], ch: char) -> Option<Sequ
 
     let mouse = if cb & 0b0100_0000 == 0b0100_0000 {
         if cb & 0b0000_0001 == 0b0000_0001 {
-            Mouse::ScrollDown(cx, cy, modifiers)
+            Mouse::ScrollDown(cx, cy)
         } else {
-            Mouse::ScrollUp(cx, cy, modifiers)
+            Mouse::ScrollUp(cx, cy)
         }
     } else {
         let drag = cb & 0b0010_0000 == 0b0010_0000;
 
         match (cb & 0b0000_0011, up, drag) {
-            (0, true, _) => Mouse::Up(MouseButton::Left, cx, cy, modifiers),
-            (0, false, false) => Mouse::Down(MouseButton::Left, cx, cy, modifiers),
-            (0, false, true) => Mouse::Drag(MouseButton::Left, cx, cy, modifiers),
-            (1, true, _) => Mouse::Up(MouseButton::Middle, cx, cy, modifiers),
-            (1, false, false) => Mouse::Down(MouseButton::Middle, cx, cy, modifiers),
-            (1, false, true) => Mouse::Drag(MouseButton::Middle, cx, cy, modifiers),
-            (2, true, _) => Mouse::Up(MouseButton::Right, cx, cy, modifiers),
-            (2, false, false) => Mouse::Down(MouseButton::Right, cx, cy, modifiers),
-            (2, false, true) => Mouse::Drag(MouseButton::Right, cx, cy, modifiers),
+            (0, true, _) => Mouse::Up(MouseButton::Left, cx, cy),
+            (0, false, false) => Mouse::Down(MouseButton::Left, cx, cy),
+            (0, false, true) => Mouse::Drag(MouseButton::Left, cx, cy),
+            (1, true, _) => Mouse::Up(MouseButton::Middle, cx, cy),
+            (1, false, false) => Mouse::Down(MouseButton::Middle, cx, cy),
+            (1, false, true) => Mouse::Drag(MouseButton::Middle, cx, cy),
+            (2, true, _) => Mouse::Up(MouseButton::Right, cx, cy),
+            (2, false, false) => Mouse::Down(MouseButton::Right, cx, cy),
+            (2, false, true) => Mouse::Drag(MouseButton::Right, cx, cy),
             _ => return None,
         }
     };
 
-    Some(Sequence::Mouse(mouse))
+    Some(Sequence::Mouse(mouse, modifiers))
 }
 
 pub(crate) fn parse_csi_rxvt_mouse(parameters: &[u64]) -> Option<Sequence> {
@@ -209,27 +209,27 @@ pub(crate) fn parse_csi_rxvt_mouse(parameters: &[u64]) -> Option<Sequence> {
 
     let mouse = if cb & 0b0110_0000 == 0b0110_0000 {
         if cb & 0b0000_0001 == 0b0000_0001 {
-            Mouse::ScrollDown(cx, cy, modifiers)
+            Mouse::ScrollDown(cx, cy)
         } else {
-            Mouse::ScrollUp(cx, cy, modifiers)
+            Mouse::ScrollUp(cx, cy)
         }
     } else {
         let drag = cb & 0b0100_0000 == 0b0100_0000;
 
         match (cb & 0b0000_0011, drag) {
-            (0b0000_0000, false) => Mouse::Down(MouseButton::Left, cx, cy, modifiers),
-            (0b0000_0010, false) => Mouse::Down(MouseButton::Right, cx, cy, modifiers),
-            (0b0000_0001, false) => Mouse::Down(MouseButton::Middle, cx, cy, modifiers),
+            (0b0000_0000, false) => Mouse::Down(MouseButton::Left, cx, cy),
+            (0b0000_0010, false) => Mouse::Down(MouseButton::Right, cx, cy),
+            (0b0000_0001, false) => Mouse::Down(MouseButton::Middle, cx, cy),
 
-            (0b0000_0000, true) => Mouse::Drag(MouseButton::Left, cx, cy, modifiers),
-            (0b0000_0010, true) => Mouse::Drag(MouseButton::Right, cx, cy, modifiers),
-            (0b0000_0001, true) => Mouse::Drag(MouseButton::Middle, cx, cy, modifiers),
+            (0b0000_0000, true) => Mouse::Drag(MouseButton::Left, cx, cy),
+            (0b0000_0010, true) => Mouse::Drag(MouseButton::Right, cx, cy),
+            (0b0000_0001, true) => Mouse::Drag(MouseButton::Middle, cx, cy),
 
-            (0b0000_0011, false) => Mouse::Up(MouseButton::Any, cx, cy, modifiers),
+            (0b0000_0011, false) => Mouse::Up(MouseButton::Any, cx, cy),
 
             _ => return None,
         }
     };
 
-    Some(Sequence::Mouse(mouse))
+    Some(Sequence::Mouse(mouse, modifiers))
 }
