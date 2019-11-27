@@ -62,10 +62,12 @@ impl Engine {
     }
 
     fn set_state(&mut self, state: State) {
-        if let State::CsiEntry = state {
+        if let State::Ground = state {
             self.parameters_count = 0;
             self.parameter = DEFAULT_PARAMETER_VALUE;
             self.ignored_parameters_count = 0;
+            self.utf8_points_count = 0;
+            self.utf8_points_expected_count = 0;
         }
         self.state = state;
     }
