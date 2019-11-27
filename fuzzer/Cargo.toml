@@ -1,0 +1,16 @@
+[package]
+name = "anes-fuzzers"
+version = "0.0.1"
+authors = ["Robert Vojta <rvojta@me.com>"]
+edition = "2018"
+description = "Anes fuzzers."
+repository = "https://github.com/zrzka/anes-rs"
+documentation = "https://docs.rs/anes/"
+license = "MIT OR Apache-2.0"
+exclude = ["target", "Cargo.lock"]
+readme = "README.md"
+publish = false
+
+[dependencies]
+afl = "0.5"
+anes = { path = "../anes", features = ["parser"] }
