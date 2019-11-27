@@ -225,7 +225,7 @@ pub(crate) fn parse_csi_rxvt_mouse(parameters: &[u64]) -> Option<Sequence> {
             (0b0000_0010, true) => Mouse::Drag(MouseButton::Right, cx, cy, modifiers),
             (0b0000_0001, true) => Mouse::Drag(MouseButton::Middle, cx, cy, modifiers),
 
-            (0b0000_0011, false) => Mouse::Up(MouseButton::Left, cx, cy, modifiers),
+            (0b0000_0011, false) => Mouse::Up(MouseButton::Any, cx, cy, modifiers),
 
             _ => return None,
         }
