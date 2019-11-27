@@ -1,4 +1,5 @@
 use afl::fuzz;
+
 use anes::Parser;
 
 fn main() {
