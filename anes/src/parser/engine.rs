@@ -153,8 +153,6 @@ impl Engine {
     }
 
     fn advance_escape_state(&mut self, performer: &mut dyn Perform, byte: u8) {
-        assert_eq!(self.state, State::Escape);
-
         match byte {
             0x1B => unreachable!(),
 
@@ -186,8 +184,6 @@ impl Engine {
     }
 
     fn advance_escape_intermediate_state(&mut self, performer: &mut dyn Perform, byte: u8) {
-        assert_eq!(self.state, State::Escape);
-
         match byte {
             0x1B => unreachable!(),
 
@@ -217,8 +213,6 @@ impl Engine {
     }
 
     fn advance_csi_entry_state(&mut self, performer: &mut dyn Perform, byte: u8) {
-        assert_eq!(self.state, State::CsiEntry);
-
         match byte {
             0x1B => unreachable!(),
 
@@ -270,8 +264,6 @@ impl Engine {
     }
 
     fn advance_csi_ignore_state(&mut self, performer: &mut dyn Perform, byte: u8) {
-        assert_eq!(self.state, State::CsiIgnore);
-
         match byte {
             0x1B => unreachable!(),
 
@@ -290,8 +282,6 @@ impl Engine {
     }
 
     fn advance_csi_parameter_state(&mut self, performer: &mut dyn Perform, byte: u8) {
-        assert_eq!(self.state, State::CsiParameter);
-
         match byte {
             0x1B => unreachable!(),
 
@@ -361,8 +351,6 @@ impl Engine {
     }
 
     fn advance_csi_intermediate_state(&mut self, performer: &mut dyn Perform, byte: u8) {
-        assert_eq!(self.state, State::CsiIntermediate);
-
         match byte {
             0x1B => unreachable!(),
 
@@ -394,9 +382,6 @@ impl Engine {
     }
 
     fn advance_utf8_state(&mut self, performer: &mut dyn Perform, byte: u8) {
-        assert!(self.utf8_points_count < MAX_UTF8_CODE_POINTS);
-        assert!(self.utf8_points_count > 0);
-
         if byte & 0b1100_0000 != 0b1000_0000 {
             self.set_state(State::Ground);
             return;
