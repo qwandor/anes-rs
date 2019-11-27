@@ -10,4 +10,4 @@ if [ ! -d "$OUT_DIR" ]; then
 fi
 
 cargo afl build
-cargo afl fuzz -i fuzzer/in -o fuzzer/out target/debug/fuzz-parser-advance "$@"
+cargo afl fuzz -i fuzzer/in -o "$OUT_DIR" target/debug/fuzz-parser-advance "$@"
