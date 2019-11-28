@@ -10,7 +10,7 @@ pub(crate) mod types;
 #[derive(Default)]
 pub struct Parser {
     engine: Engine,
-    performer: Performer,
+    provider: SequenceProvider,
 }
 
 impl Parser {
@@ -21,7 +21,7 @@ impl Parser {
     }
 
     pub fn advance(&mut self, byte: u8, more: bool) {
-        self.engine.advance(&mut self.performer, byte, more);
+        self.engine.advance(&mut self.provider, byte, more);
     }
 }
 
@@ -29,17 +29,17 @@ impl Iterator for Parser {
     type Item = Sequence;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.performer.next()
+        self.provider.next()
     }
 }
 
 #[derive(Default)]
-struct Performer {
+struct SequenceProvider {
     esc_o: bool,
     seqs: VecDeque<Sequence>,
 }
 
-impl Iterator for Performer {
+impl Iterator for SequenceProvider {
     type Item = Sequence;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -47,7 +47,7 @@ impl Iterator for Performer {
     }
 }
 
-impl Provide for Performer {
+impl Provide for SequenceProvider {
     fn provide_char(&mut self, ch: char) {
         //        eprintln!("dispatch_char: {}", ch);
 
