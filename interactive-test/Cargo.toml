@@ -8,7 +8,6 @@ repository = "https://github.com/zrzka/anes-rs"
 documentation = "https://docs.rs/anes/"
 license = "MIT OR Apache-2.0"
 exclude = ["target", "Cargo.lock"]
-readme = "README.md"
 publish = false
 
 [dependencies]
