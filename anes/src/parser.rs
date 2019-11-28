@@ -7,6 +7,37 @@ mod engine;
 mod parsers;
 pub(crate) mod types;
 
+/// An ANSI escape sequence parser.
+///
+/// `Parser` implements the `Iterator<Item = Sequence>` trait, thus you can use the
+/// `next()` method to consume all valid sequences with known meaning.
+///
+/// # Examples
+///
+/// Parse cursor position:
+///
+/// ```
+/// use anes::parser::{Parser, Sequence};
+///
+/// let mut parser = Parser::default();
+/// parser.advance(b"\x1B[20;10R", false);
+///
+/// assert_eq!(Some(Sequence::CursorPosition(10, 20)), parser.next());
+/// assert!(parser.next().is_none());
+/// ```
+///
+/// Parse keyboard event:
+///
+/// ```
+/// use anes::parser::{KeyCode, KeyModifiers, Parser, Sequence};
+///
+/// let mut parser = Parser::default();
+/// parser.advance("𐌼a".as_bytes(), false);
+///
+/// assert_eq!(Some(Sequence::Key(KeyCode::Char('𐌼'), KeyModifiers::empty())), parser.next());
+/// assert_eq!(Some(Sequence::Key(KeyCode::Char('a'), KeyModifiers::empty())), parser.next());
+/// assert!(parser.next().is_none());
+/// ```
 #[derive(Default)]
 pub struct Parser {
     engine: Engine,
@@ -14,6 +45,50 @@ pub struct Parser {
 }
 
 impl Parser {
+    /// Advances parser state machine with additional input data.
+    ///
+    /// # Arguments
+    ///
+    /// * `buffer` - input data (stdin in raw mode, etc.)
+    /// * `more` - more input data available right now
+    ///
+    /// It's crucial to provide correct `more` value in order to receive `KeyCode::Esc` events
+    /// as soon as possible.
+    ///
+    /// # Examples
+    ///
+    /// Esc key:
+    ///
+    /// ```
+    /// use anes::parser::{KeyCode, KeyModifiers, Parser, Sequence};
+    ///
+    /// let mut parser = Parser::default();
+    /// // User pressed Esc key & nothing else which means that there's no additional input available
+    /// // aka no possible escape sequence = `KeyCode::Esc` dispatched.
+    /// parser.advance(&[0x1b], false);
+    ///
+    /// assert_eq!(Some(Sequence::Key(KeyCode::Esc, KeyModifiers::empty())), parser.next());
+    /// assert!(parser.next().is_none());
+    /// ```
+    ///
+    /// Possible escape sequence:
+    ///
+    /// ```
+    /// use anes::parser::{KeyCode, KeyModifiers, Parser, Sequence};
+    ///
+    /// let mut parser = Parser::default();
+    /// // User pressed F1 = b"\x1BOP"
+    ///
+    /// // Every escape sequence starts with Esc (0x1b). There's more input available
+    /// // aka possible escape sequence = `KeyCode::Esc` isn't dispatched.
+    /// parser.advance(&[0x1b], true);
+    /// assert!(parser.next().is_none());
+    ///
+    /// // Advance parser with rest of the sequence
+    /// parser.advance(&[b'O', b'P'], false);
+    /// assert_eq!(Some(Sequence::Key(KeyCode::F(1), KeyModifiers::empty())), parser.next());
+    /// assert!(parser.next().is_none());
+    /// ```
     pub fn advance(&mut self, buffer: &[u8], more: bool) {
         let len = buffer.len();
         for (idx, byte) in buffer.iter().enumerate() {
