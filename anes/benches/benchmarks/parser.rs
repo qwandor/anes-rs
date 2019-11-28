@@ -7,11 +7,11 @@ pub fn parser(c: &mut Criterion) {
 
     let mut parser = Parser::default();
 
-    c.bench_function("advance with slice and consume", |b| {
+    c.bench_function("advance and consume", |b| {
         let input = XTERM_MOUSE.as_bytes();
 
         b.iter(|| {
-            parser.advance_with_slice(black_box(input), black_box(true));
+            parser.advance(black_box(input), black_box(true));
             while let Some(_) = parser.next() {}
         })
     });

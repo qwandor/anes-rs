@@ -2,12 +2,7 @@
 macro_rules! test_sequence {
     ($bytes:expr, $seq:expr) => {
         let mut parser = ::anes::Parser::default();
-
-        let len = $bytes.len();
-        for (i, byte) in $bytes.iter().enumerate() {
-            parser.advance(*byte, i < len - 1);
-        }
-
+        parser.advance($bytes, false);
         assert_eq!(parser.next(), Some($seq));
     };
 }
