@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use engine::{Engine, Perform};
+use engine::{Engine, Provide};
 use types::Sequence;
 
 mod engine;
@@ -47,8 +47,8 @@ impl Iterator for Performer {
     }
 }
 
-impl Perform for Performer {
-    fn dispatch_char(&mut self, ch: char) {
+impl Provide for Performer {
+    fn provide_char(&mut self, ch: char) {
         //        eprintln!("dispatch_char: {}", ch);
 
         if let Some(seq) = parsers::parse_char(ch, self.esc_o) {
@@ -57,7 +57,7 @@ impl Perform for Performer {
         self.esc_o = false;
     }
 
-    fn dispatch_esc(&mut self, ch: char) {
+    fn provide_esc_sequence(&mut self, ch: char) {
         if ch == 'O' {
             // Exception
             //
@@ -72,7 +72,7 @@ impl Perform for Performer {
         }
     }
 
-    fn dispatch_csi(&mut self, parameters: &[u64], ignored_count: usize, ch: char) {
+    fn provide_csi_sequence(&mut self, parameters: &[u64], ignored_count: usize, ch: char) {
         if let Some(seq) = parsers::parse_csi(parameters, ignored_count, ch) {
             self.seqs.push_back(seq);
         }
