@@ -4,21 +4,51 @@
 // The parser is heavily inspired by the vte (https://crates.io/crates/vte) crate.
 // Tried to use this crate, but it doesn't work for opposite way (terminal -> sequence),
 // because there're couple of exceptions we have to handle and it doesn't make much
-// sense to add them to the vte crate.
+// sense to add them to the vte crate. An example is Esc key where we need to know if
+// there's additional input available or not and then the decision is made if the
+// Esc char is dispatched immediately (user hits just Esc key) or if it's an escape/csi/...
+// sequence.
 //
 const MAX_PARAMETERS: usize = 30;
 const DEFAULT_PARAMETER_VALUE: u64 = 0;
 const MAX_UTF8_CODE_POINTS: usize = 4;
 
+/// A parser engine state.
+///
+/// All these variant names come from the
+/// [A parser for DEC’s ANSI-compatible video terminals](https://vt100.net/emu/dec_ansi_parser)
+/// description.
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 enum State {
+    /// Initial state.
     Ground,
+    /// Escape sequence started.
+    ///
+    /// `Esc` received with a flag that there's more data available.
     Escape,
+    /// Escape sequence and we're collecting intermediates.
+    ///
+    /// # Notes
+    ///
+    /// This implementation doesn't collect intermediates. It just handles the state
+    /// to distinguish between (im)proper sequences.
     EscapeIntermediate,
+    /// CSI sequence started.
+    ///
+    /// `Esc` followed by the `[` received.
     CsiEntry,
+    /// CSI sequence should be consumed, but not dispatched.
     CsiIgnore,
+    /// CSI sequence and we're collecting parameters.
     CsiParameter,
+    /// CSI sequence and we're collecting intermediates.
+    ///
+    /// # Notes
+    ///
+    /// This implementation doesn't collect intermediates. It just handles the state
+    /// to distinguish between (im)proper sequences.
     CsiIntermediate,
+    /// Possible UTF-8 sequence and we're collecting UTF-8 code points.
     Utf8,
 }
 
