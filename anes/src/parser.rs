@@ -16,9 +16,9 @@ pub struct Parser {
 impl Parser {
     pub fn advance(&mut self, buffer: &[u8], more: bool) {
         let len = buffer.len();
-        for idx in 0..len {
+        for (idx, byte) in buffer.iter().enumerate() {
             self.engine
-                .advance(&mut self.provider, buffer[idx], idx < len - 1 || more);
+                .advance(&mut self.provider, *byte, idx < len - 1 || more);
         }
     }
 }
