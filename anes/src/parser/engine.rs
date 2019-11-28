@@ -102,6 +102,16 @@ impl Engine {
         self.state = state;
     }
 
+    fn store_parameter(&mut self) {
+        if self.parameters_count < MAX_PARAMETERS {
+            self.parameters[self.parameters_count] = self.parameter;
+            self.parameters_count += 1;
+        } else {
+            self.ignored_parameters_count += 1;
+        }
+        self.parameter = DEFAULT_PARAMETER_VALUE;
+    }
+
     fn handle_possible_esc(&mut self, performer: &mut dyn Perform, byte: u8, more: bool) -> bool {
         if byte != 0x1B {
             return false;
@@ -250,13 +260,7 @@ impl Engine {
 
             // Semicolon = parameter delimiter
             0x3B => {
-                if self.parameters_count < MAX_PARAMETERS {
-                    self.parameters[self.parameters_count] = self.parameter;
-                    self.parameters_count += 1;
-                } else {
-                    self.ignored_parameters_count += 1;
-                }
-                self.parameter = DEFAULT_PARAMETER_VALUE;
+                self.store_parameter();
                 self.set_state(State::CsiParameter);
             }
 
@@ -289,13 +293,8 @@ impl Engine {
 
             // Collect rest as parameters
             _ => {
-                if self.parameters_count < MAX_PARAMETERS {
-                    self.parameters[self.parameters_count] = byte as u64;
-                    self.parameters_count += 1;
-                } else {
-                    self.ignored_parameters_count += 1;
-                }
-                self.parameter = DEFAULT_PARAMETER_VALUE;
+                self.parameter = byte as u64;
+                self.store_parameter();
             }
         };
     }
@@ -329,27 +328,12 @@ impl Engine {
             }
 
             // Semicolon = parameter delimiter
-            0x3B => {
-                if self.parameters_count < MAX_PARAMETERS {
-                    self.parameters[self.parameters_count] = self.parameter;
-                    self.parameters_count += 1;
-                } else {
-                    self.ignored_parameters_count += 1;
-                }
-                self.parameter = DEFAULT_PARAMETER_VALUE;
-            }
+            0x3B => self.store_parameter(),
 
             // CSI sequence final character
             //   -> dispatch CSI sequence
             0x40..=0x7E => {
-                if self.parameters_count < MAX_PARAMETERS {
-                    self.parameters[self.parameters_count] = self.parameter;
-                    self.parameters_count += 1;
-                } else {
-                    self.ignored_parameters_count += 1;
-                }
-                self.parameter = DEFAULT_PARAMETER_VALUE;
-
+                self.store_parameter();
                 performer.dispatch_csi(
                     &self.parameters[..self.parameters_count],
                     self.ignored_parameters_count,
@@ -361,14 +345,7 @@ impl Engine {
 
             // Intermediates to collect
             0x20..=0x2F => {
-                if self.parameters_count < MAX_PARAMETERS {
-                    self.parameters[self.parameters_count] = self.parameter;
-                    self.parameters_count += 1;
-                } else {
-                    self.ignored_parameters_count += 1;
-                }
-                self.parameter = DEFAULT_PARAMETER_VALUE;
-
+                self.store_parameter();
                 self.set_state(State::CsiIntermediate);
             }
 
