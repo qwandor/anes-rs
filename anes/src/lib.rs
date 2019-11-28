@@ -47,12 +47,6 @@
 #[macro_use]
 mod macros;
 
-#[cfg(feature = "parser")]
-pub use self::parser::{
-    types::{KeyCode, KeyModifiers, Mouse, MouseButton, Sequence},
-    Parser,
-};
-
 pub use self::sequences::{
     attribute::{Attribute, ResetAttributes, SetAttribute},
     buffer::{
@@ -70,5 +64,5 @@ pub use self::sequences::{
 };
 
 #[cfg(feature = "parser")]
-mod parser;
+pub mod parser;
 mod sequences;

@@ -1,6 +1,6 @@
 use criterion::{black_box, criterion_group, Criterion};
 
-use anes::Parser;
+use anes::parser::Parser;
 
 pub fn parser(c: &mut Criterion) {
     const XTERM_MOUSE: &str = "\x1B[<28;20;10;m";

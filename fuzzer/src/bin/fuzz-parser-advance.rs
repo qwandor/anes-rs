@@ -1,6 +1,6 @@
 use afl::fuzz;
 
-use anes::Parser;
+use anes::parser::Parser;
 
 fn main() {
     fuzz!(|data: &[u8]| {

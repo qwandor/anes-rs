@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 
 use engine::{Engine, Provide};
-use types::Sequence;
+pub use types::{KeyCode, KeyModifiers, Mouse, MouseButton, Sequence};
 
 mod engine;
 mod parsers;

@@ -1,4 +1,4 @@
-use anes::{KeyModifiers, Mouse, MouseButton, Sequence};
+use anes::parser::{KeyModifiers, Mouse, MouseButton, Sequence};
 
 use crate::test_sequences;
 

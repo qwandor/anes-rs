@@ -1,4 +1,4 @@
-use anes::Sequence;
+use anes::parser::Sequence;
 
 use crate::test_sequences;
 

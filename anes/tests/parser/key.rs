@@ -1,4 +1,4 @@
-use anes::{KeyCode, KeyModifiers, Sequence};
+use anes::parser::{KeyCode, KeyModifiers, Sequence};
 
 use crate::test_sequences;
 
