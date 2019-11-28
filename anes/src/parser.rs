@@ -66,14 +66,14 @@ impl Provide for Performer {
             self.esc_o = true;
         } else {
             self.esc_o = false;
-            if let Some(seq) = parsers::parse_esc(ch) {
+            if let Some(seq) = parsers::parse_esc_sequence(ch) {
                 self.seqs.push_back(seq);
             }
         }
     }
 
     fn provide_csi_sequence(&mut self, parameters: &[u64], ignored_count: usize, ch: char) {
-        if let Some(seq) = parsers::parse_csi(parameters, ignored_count, ch) {
+        if let Some(seq) = parsers::parse_csi_sequence(parameters, ignored_count, ch) {
             self.seqs.push_back(seq);
         }
 

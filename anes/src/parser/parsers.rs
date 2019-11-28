@@ -22,13 +22,17 @@ pub(crate) fn parse_char(ch: char, esc_o: bool) -> Option<Sequence> {
     Some(Sequence::Key(code, KeyModifiers::empty()))
 }
 
-pub(crate) fn parse_esc(ch: char) -> Option<Sequence> {
+pub(crate) fn parse_esc_sequence(ch: char) -> Option<Sequence> {
     // EscO[P-S] is handled in the Performer, see parse_char & esc_o argument
     // No need to handle other cases here? It's just Alt+$char
     Some(Sequence::Key(KeyCode::Char(ch), KeyModifiers::ALT))
 }
 
-pub(crate) fn parse_csi(parameters: &[u64], _ignored_count: usize, ch: char) -> Option<Sequence> {
+pub(crate) fn parse_csi_sequence(
+    parameters: &[u64],
+    _ignored_count: usize,
+    ch: char,
+) -> Option<Sequence> {
     match ch {
         'A' => Some(Sequence::Key(
             KeyCode::Up,
@@ -89,7 +93,7 @@ fn parse_key_modifiers(parameter: Option<u64>) -> KeyModifiers {
     }
 }
 
-pub(crate) fn parse_csi_tilde_key_code(parameters: &[u64]) -> Option<Sequence> {
+fn parse_csi_tilde_key_code(parameters: &[u64]) -> Option<Sequence> {
     if parameters.is_empty() {
         return None;
     }
@@ -112,7 +116,7 @@ pub(crate) fn parse_csi_tilde_key_code(parameters: &[u64]) -> Option<Sequence> {
     Some(Sequence::Key(code, modifiers))
 }
 
-pub(crate) fn parse_csi_cursor_position(parameters: &[u64]) -> Option<Sequence> {
+fn parse_csi_cursor_position(parameters: &[u64]) -> Option<Sequence> {
     // ESC [ Cy ; Cx R
 
     if parameters.len() < 2 {
@@ -125,7 +129,7 @@ pub(crate) fn parse_csi_cursor_position(parameters: &[u64]) -> Option<Sequence> 
     Some(Sequence::CursorPosition(x, y))
 }
 
-pub(crate) fn parse_csi_xterm_mouse(parameters: &[u64], ch: char) -> Option<Sequence> {
+fn parse_csi_xterm_mouse(parameters: &[u64], ch: char) -> Option<Sequence> {
     // ESC [ < Cb ; Cx ; Cy (;) (M or m)
 
     if parameters.len() < 4 {
@@ -182,7 +186,7 @@ pub(crate) fn parse_csi_xterm_mouse(parameters: &[u64], ch: char) -> Option<Sequ
     Some(Sequence::Mouse(mouse, modifiers))
 }
 
-pub(crate) fn parse_csi_rxvt_mouse(parameters: &[u64]) -> Option<Sequence> {
+fn parse_csi_rxvt_mouse(parameters: &[u64]) -> Option<Sequence> {
     // ESC [ Cb ; Cx ; Cy ; M
 
     if parameters.len() < 3 {

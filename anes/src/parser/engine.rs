@@ -52,7 +52,7 @@ enum State {
     Utf8,
 }
 
-pub trait Provide {
+pub(crate) trait Provide {
     fn provide_char(&mut self, ch: char);
 
     fn provide_esc_sequence(&mut self, ch: char);
@@ -60,7 +60,7 @@ pub trait Provide {
     fn provide_csi_sequence(&mut self, parameters: &[u64], ignored_count: usize, ch: char);
 }
 
-pub struct Engine {
+pub(crate) struct Engine {
     parameters: [u64; MAX_PARAMETERS],
     parameters_count: usize,
     parameter: u64,
@@ -73,12 +73,6 @@ pub struct Engine {
 
 impl Default for Engine {
     fn default() -> Self {
-        Engine::new()
-    }
-}
-
-impl Engine {
-    pub fn new() -> Engine {
         Engine {
             parameters: [DEFAULT_PARAMETER_VALUE; MAX_PARAMETERS],
             parameters_count: 0,
@@ -90,7 +84,9 @@ impl Engine {
             utf8_points_expected_count: 0,
         }
     }
+}
 
+impl Engine {
     fn set_state(&mut self, state: State) {
         if let State::Ground = state {
             self.parameters_count = 0;
@@ -415,7 +411,7 @@ impl Engine {
         }
     }
 
-    pub fn advance(&mut self, provider: &mut dyn Provide, byte: u8, more: bool) {
+    pub(crate) fn advance(&mut self, provider: &mut dyn Provide, byte: u8, more: bool) {
         // eprintln!("advance: {:?} {} {}", self.state, byte, more);
 
         if self.handle_possible_esc(provider, byte, more) {
