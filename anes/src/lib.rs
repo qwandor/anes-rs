@@ -1,4 +1,6 @@
-//! # ANSI Escape Sequence
+//! # ANSI Escape Sequences provider & parser
+//!
+//! ## Sequences provider
 //!
 //! The `anes` crate provides ANSI escape sequences you can use to control the terminal
 //! cursor (show, hide, ...), colors (foreground, background), display attributes (bold, ...)
@@ -12,12 +14,13 @@
 //! Ask if you need more sequences or use the [`sequence!`](macro.sequence.html) macro to create
 //! your own sequences.
 //!
-//! ## Terminal Support
+//!
+//! ### Terminal Support
 //!
 //! Not all ANSI escape sequences are supported by all terminals. You can use the
 //! [interactive-test](https://github.com/zrzka/anes-rs/tree/master/interactive-test) to test them.
 //!
-//! ## Examples
+//! ### Examples
 //!
 //! Retrieve the sequence as a `String`:
 //!
@@ -40,10 +43,19 @@
 //!     execute!(&mut stdout, anes::ResetAttributes)
 //! }
 //! ```
+//!
+//! ## Sequences parser
+//!
+//! Parser isn't available with default features. You have to enable `parser` feature if you'd like to use it.
+//! You can learn more about this feature in the [`parser`](parser/index.html) module documentation.
 #![warn(rust_2018_idioms)]
 #![deny(unused_imports, unused_must_use)]
 
-pub use self::{
+// Keep it first to load all the macros before other modules.
+#[macro_use]
+mod macros;
+
+pub use self::sequences::{
     attribute::{Attribute, ResetAttributes, SetAttribute},
     buffer::{
         ClearBuffer, ClearLine, ScrollBufferDown, ScrollBufferUp, SwitchBufferToAlternate,
@@ -53,18 +65,12 @@ pub use self::{
     cursor::{
         DisableCursorBlinking, EnableCursorBlinking, HideCursor, MoveCursorDown, MoveCursorLeft,
         MoveCursorRight, MoveCursorTo, MoveCursorToColumn, MoveCursorToNextLine,
-        MoveCursorToPreviousLine, MoveCursorUp, RestoreCursorPosition, SaveCursorPosition,
-        ShowCursor,
+        MoveCursorToPreviousLine, MoveCursorUp, ReportCursorPosition, RestoreCursorPosition,
+        SaveCursorPosition, ShowCursor,
     },
     terminal::ResizeTextArea,
 };
 
-// Keep it first to load all the macros before other modules.
-#[macro_use]
-mod macros;
-
-mod attribute;
-mod buffer;
-mod color;
-mod cursor;
-mod terminal;
+#[cfg(feature = "parser")]
+pub mod parser;
+mod sequences;
