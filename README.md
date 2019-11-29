@@ -7,66 +7,44 @@
 [![Apache 2.0][apache-license-badge]][apache-license-link]
 ![LOC][loc-badge]
 
-# ANSI Escape Sequence
+# ANSI Escape Sequences provider & parser
 
-A Rust library which provides an ANSI escape sequences (or codes, whatever you like more).
+This README file is for the `anes-rs` repository. If you're looking
+for the user documentation, please, go to [`anes/README.md`](anes/README.md).
 
-## Terminal support
+## Repository organisation
 
-Not all ANSI escape sequences are supported by all terminals. You can use the
-[interactive-test](https://github.com/zrzka/anes-rs/tree/master/interactive-test) to test them.
-Checkout the repository and then:
- 
-```bash
-$ cd anes-rs
-$ cargo run --bin interactive-test
-``` 
-
-## Examples
-
-<details>
-<summary>
-Click to show Cargo.toml.
-</summary>
-
-```toml
-[dependencies]
-anes = "0.1"
+```text 
+anes-rs
+ ├ README.md        - this README
+ ├ anes             - `anes` crate
+ │  ├ benches       - `anes` crate benchmarks
+ │  ├ examples      - `anes` crate examples
+ │  ├ src           - `anes` crate source code
+ │  ├ tests         - `anes` crate tests
+ │  └ README.md     - `anes` crate README for crates.io site
+ ├ fuzzer            - fuzzing binary targets
+ ├ interactive-test  - interactive test for the `anes` crate
+ └ scripts           - various scripts to run bechmarks, fuzzer, ...
 ```
 
-</details>
-<p></p>
+### Benchmarks
 
+You can run benchmarks with the `scripts/bench.sh` script. `criterion` output is
+available in the `anes/target/criterion` folder. If you'd like to modify the
+parser module (`anes/src/parser`) in any way, please, do:
 
-An example how to retrieve the ANSI escape sequence as a `String`:
+* run benchmarks,
+* modify the parser code,
+* run benchmarks again.
 
-```rust
-use anes::SaveCursorPosition;
+Do not commit any change which degrades the parser performance. TIA!
 
-fn main() {
-    let string = format!("{}", SaveCursorPosition);
-    assert_eq!(&string, "\x1B7");
-}
-```
+### Fuzzer
 
-An example how to use the ANSI escape sequence:
-
-```rust
-use std::io::{Result, Write};
-
-use anes::execute;
-
-fn main() -> Result<()> {
-    let mut stdout = std::io::stdout();
-    execute!(
-        &mut stdout,
-        anes::SaveCursorPosition,
-        anes::MoveCursorTo(10, 10),
-        anes::RestoreCursorPosition
-    )?;
-    Ok(())
-}
-```
+You can start fuzzing with the `scripts/fuzz.sh` script. Feel free to stop fuzzing
+any time with the `Ctrl C`, AFL allows you to continue with the `scripts/fuzz-continue.sh`
+script.
 
 ## Motivation
 
