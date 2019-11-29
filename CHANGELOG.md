@@ -1,4 +1,4 @@
-# master
+# Version 0.1.6
 
 * Add `ReportCursorPosition` sequence
 * Add `EnableMouseEvents`, `DisableMouseEvents` sequences
