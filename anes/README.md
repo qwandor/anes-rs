@@ -7,11 +7,14 @@
 [![Apache 2.0][apache-license-badge]][apache-license-link]
 ![LOC][loc-badge]
 
-# ANSI Escape Sequence
+# ANSI Escape Sequences provider & parser
 
-A Rust library which provides an ANSI escape sequences (or codes, whatever you like more).
+A Rust library which provides an ANSI escape sequences (or codes, whatever you like more)
+and a parser allowing you to parse data from the STDIN (or `/dev/tty`) in the raw mode.  
 
-## Terminal support
+## Sequences provider
+
+### Terminal support
 
 Not all ANSI escape sequences are supported by all terminals. You can use the
 [interactive-test](https://github.com/zrzka/anes-rs/tree/master/interactive-test) to test them.
@@ -22,7 +25,7 @@ $ cd anes-rs
 $ cargo run --bin interactive-test
 ``` 
 
-## Examples
+### Examples
 
 <details>
 <summary>
@@ -66,6 +69,37 @@ fn main() -> Result<()> {
     )?;
     Ok(())
 }
+```
+
+## Sequences parser
+
+You have to enable `parser` feature in order to use the parser. It's disabled by default.
+
+### Examples
+
+<details>
+<summary>
+Click to show Cargo.toml.
+</summary>
+
+```toml
+[dependencies]
+anes = { version = "0.1", features = ["parser"] }
+```
+
+</details>
+<p></p>
+
+An example how to parse cursor position:
+
+```rust
+use anes::parser::{Parser, Sequence};
+
+let mut parser = Parser::default();
+parser.advance(b"\x1B[20;10R", false);
+
+assert_eq!(Some(Sequence::CursorPosition(10, 20)), parser.next());
+assert!(parser.next().is_none());
 ```
 
 ## Motivation
