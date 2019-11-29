@@ -68,7 +68,7 @@ pub use self::sequences::{
         MoveCursorToPreviousLine, MoveCursorUp, ReportCursorPosition, RestoreCursorPosition,
         SaveCursorPosition, ShowCursor,
     },
-    terminal::ResizeTextArea,
+    terminal::{DisableMouseEvents, EnableMouseEvents, ResizeTextArea},
 };
 
 #[cfg(feature = "parser")]
