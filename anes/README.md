@@ -102,23 +102,6 @@ assert_eq!(Some(Sequence::CursorPosition(10, 20)), parser.next());
 assert!(parser.next().is_none());
 ```
 
-## Motivation
-
-There're couple of terminal crates like:
-
-* [crossterm](https://github.com/crossterm-rs/crossterm),
-* [termion](https://github.com/redox-os/termion),
-* etc.
-
-All these crates do share two pieces of code:
-
-* ANSI escape sequences and
-* input event parsers.
-
-I think that it's a waste of resources and asked Timon (the `crossterm` crate maintainer) what he thinks
-about a new crate as a building block for the `crossterm` and other crates. And here we
-are ...
-
 ## License
 
 The ANES crate is dual-licensed under [Apache 2.0][apache-license-link] and
