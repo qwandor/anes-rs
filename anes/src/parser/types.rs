@@ -1,6 +1,9 @@
 use bitflags::bitflags;
 
 /// A parsed ANSI escape sequence.
+///
+/// Check the [`Parser`](struct.Parser.html) structure documentation for examples
+/// how to retrieve these values.
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub enum Sequence {
     /// A keyboard event sequence.

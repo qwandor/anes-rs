@@ -1,3 +1,46 @@
+//! An ANSI escape sequence parser module.
+//!
+//! **This module is not available with default features. You have to enable `parser` feature
+//! if you'd like to use it.**
+//!
+//! # Parser
+//!
+//! The ANSI escape sequence parser parses input data in two steps:
+//!
+//! * transforms input data into valid characters, generic csi & escape sequences, throws away invalid data,
+//! * give them meaning, throws away sequences without known meaning.
+//!
+//! ## First step
+//!
+//! State machine implementation for the first step is inspired by the
+//! [A parser for DEC’s ANSI-compatible video terminals](https://vt100.net/emu/dec_ansi_parser) article
+//! and the [vte](https://crates.io/crates/vte) crate. The goal of this step is to transform an input
+//! data into characters, generic csi & escape sequences, validate them and throw away malformed input.
+//!
+//! An example of valid csi sequence: `b"\x1B[20;10R"`. Output of the first step will be:
+//!
+//! * valid csi sequence
+//! * with two parameters `[20, 10]`
+//! * and the final character `R`.
+//!
+//! ## Second step
+//!
+//! An input of this step is output of the first one. We know that the final character `R` represents
+//! cursor position and two parameters should be provided. They were provided, we can give it a
+//! meaning and return `Sequence::CursorPosition(10, 20)`.
+//!
+//! All sequences without known meaning are discarded.
+//!
+//! ## Implementation
+//!
+//! Both steps are considered as an implementation detail and there's no plan to make them
+//! publicly available.
+//!
+//! The `parser` module provides the [`Parser`](struct.Parser.html) structure you can feed with
+//! the [`advance`](struct.Parser.html#method.advance) method. It also implements the standard
+//! library `Iterator<Item = Sequence>` trait which allows you to consume valid sequences with
+//! known meaning via the `next()` method. Check the [`Sequence`](enum.Sequence.html) enum to learn
+//! what this module can parse.
 use std::collections::VecDeque;
 
 use engine::{Engine, Provide};
@@ -80,7 +123,8 @@ impl Parser {
     /// // User pressed F1 = b"\x1BOP"
     ///
     /// // Every escape sequence starts with Esc (0x1b). There's more input available
-    /// // aka possible escape sequence = `KeyCode::Esc` isn't dispatched.
+    /// // aka possible escape sequence = `KeyCode::Esc` isn't dispatched even when the parser
+    /// // doesn't know rest of the sequence.
     /// parser.advance(&[0x1b], true);
     /// assert!(parser.next().is_none());
     ///
