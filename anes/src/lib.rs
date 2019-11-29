@@ -1,4 +1,6 @@
-//! # ANSI Escape Sequence
+//! # ANSI Escape Sequences provider & parser
+//!
+//! ## Sequences provider
 //!
 //! The `anes` crate provides ANSI escape sequences you can use to control the terminal
 //! cursor (show, hide, ...), colors (foreground, background), display attributes (bold, ...)
@@ -12,12 +14,13 @@
 //! Ask if you need more sequences or use the [`sequence!`](macro.sequence.html) macro to create
 //! your own sequences.
 //!
-//! ## Terminal Support
+//!
+//! ### Terminal Support
 //!
 //! Not all ANSI escape sequences are supported by all terminals. You can use the
 //! [interactive-test](https://github.com/zrzka/anes-rs/tree/master/interactive-test) to test them.
 //!
-//! ## Examples
+//! ### Examples
 //!
 //! Retrieve the sequence as a `String`:
 //!
@@ -40,6 +43,11 @@
 //!     execute!(&mut stdout, anes::ResetAttributes)
 //! }
 //! ```
+//!
+//! ## Sequences parser
+//!
+//! Parser isn't available with default features. You have to enable `parser` feature if you'd like to use it.
+//! You can learn more about this feature in the [`parser`](parser/index.html) module documentation.
 #![warn(rust_2018_idioms)]
 #![deny(unused_imports, unused_must_use)]
 
