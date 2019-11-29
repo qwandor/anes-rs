@@ -1,6 +1,7 @@
 # master
 
 * Add `ReportCursorPosition` sequence
+* Add `EnableMouseEvents`, `DisableMouseEvents` sequences
 * Add ANSI escape sequence parser (feature `parser`, disabled by default)
   * Add `Parser` engine
   * Add `KeyCode`, `KeyModifiers`, `Mouse`, `MouseButton`, `Sequence` types
