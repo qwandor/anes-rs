@@ -1,6 +1,6 @@
 [package]
 name = "anes"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["Robert Vojta <rvojta@me.com>"]
 edition = "2018"
 description = "ANSI Escape Sequences provider & parser"
