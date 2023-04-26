@@ -25,7 +25,7 @@ default = []
 parser = ["bitflags"]
 
 [dependencies]
-bitflags = { version = "1.2", optional = true }
+bitflags = { version = "2.2.1", optional = true }
 
 [dev-dependencies]
 criterion = "0.3"
