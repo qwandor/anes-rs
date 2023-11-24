@@ -2,7 +2,7 @@
 
 sequence!(
     /// Resizes the text area to the given width and height in characters.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -19,7 +19,7 @@ sequence!(
 
 sequence!(
     /// Tells the terminal to start reporting mouse events.
-    /// 
+    ///
     /// Mouse events are not reported by default.
     struct EnableMouseEvents => concat!(
         csi!("?1000h"),
@@ -50,5 +50,5 @@ test_sequences!(
     ),
     disable_mouse_events(
         DisableMouseEvents => "\x1B[?1006l\x1B[?1015l\x1B[?1002l\x1B[?1000l",
-    )    
+    )
 );

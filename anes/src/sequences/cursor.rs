@@ -2,7 +2,7 @@
 
 sequence!(
     /// Saves the cursor position.
-    /// 
+    ///
     /// Use the [`RestoreCursorPosition`](struct.RestoreCursorPosition.html) sequence to
     /// restore the cursor position.
     ///
@@ -15,21 +15,21 @@ sequence!(
     /// let mut stdout = stdout();
     /// // Save cursor position
     /// write!(stdout, "{}", SaveCursorPosition);
-    /// 
+    ///
     /// // Your app
-    /// 
+    ///
     /// // Restore cursor position
     /// write!(stdout, "{}", RestoreCursorPosition);
-    /// ```    
-    struct SaveCursorPosition => esc!("7")    
+    /// ```
+    struct SaveCursorPosition => esc!("7")
 );
 
 sequence!(
     /// Restores the cursor position.
-    /// 
+    ///
     /// Use the [`SaveCursorPosition`](struct.SaveCursorPosition.html) sequence to
     /// save the cursor position.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -39,9 +39,9 @@ sequence!(
     /// let mut stdout = stdout();
     /// // Save cursor position
     /// write!(stdout, "{}", SaveCursorPosition);
-    /// 
+    ///
     /// // Your app
-    /// 
+    ///
     /// // Restore cursor position
     /// write!(stdout, "{}", RestoreCursorPosition);
     /// ```
@@ -50,9 +50,9 @@ sequence!(
 
 sequence!(
     /// Hides the cursor.
-    /// 
+    ///
     /// Use the [`ShowCursor`](struct.ShowCursor.html) sequence to show the cursor.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -68,9 +68,9 @@ sequence!(
 
 sequence!(
     /// Shows the cursor.
-    /// 
-    /// Use the [`HideCursor`](struct.HideCursor.html) sequence to hide the cursor.    
-    /// 
+    ///
+    /// Use the [`HideCursor`](struct.HideCursor.html) sequence to hide the cursor.
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -86,10 +86,10 @@ sequence!(
 
 sequence!(
     /// Enables the cursor blinking.
-    /// 
+    ///
     /// Use the [`DisableCursorBlinking`](struct.DisableCursorBlinking.html) sequence to disable
     /// cursor blinking.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -105,10 +105,10 @@ sequence!(
 
 sequence!(
     /// Disables the cursor blinking.
-    /// 
+    ///
     /// Use the [`EnableCursorBlinking`](struct.EnableCursorBlinking.html) sequence to enable
     /// cursor blinking.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -128,7 +128,7 @@ sequence!(
     /// # Notes
     ///
     /// Top/left cell is represented as `1, 1` (`column, row`).
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -145,7 +145,7 @@ sequence!(
 
 sequence!(
     /// Moves the cursor up by the given number of rows.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -162,7 +162,7 @@ sequence!(
 
 sequence!(
     /// Moves the cursor down by the given number of rows.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -179,7 +179,7 @@ sequence!(
 
 sequence!(
     /// Moves the cursor right by the given number of columns.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -196,7 +196,7 @@ sequence!(
 
 sequence!(
     /// Moves the cursor left by the given number of columns.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -213,7 +213,7 @@ sequence!(
 
 sequence!(
     /// Moves the cursor to beginning of line the given number of lines down.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -224,9 +224,9 @@ sequence!(
     /// // Move cursor down by 2 rows and the move it to the first column
     /// write!(stdout, "{}", MoveCursorToNextLine(2));
     /// ```
-    /// 
+    ///
     /// The previous example does the same thing as the following one:
-    /// 
+    ///
     /// ```no_run
     /// use std::io::{stdout, Write};
     /// use anes::{MoveCursorDown, MoveCursorToColumn};
@@ -240,7 +240,7 @@ sequence!(
 
 sequence!(
     /// Moves the cursor to beginning of line the given number of lines up.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -251,9 +251,9 @@ sequence!(
     /// // Move cursor up by 2 rows and the move it to the first column
     /// write!(stdout, "{}", MoveCursorToPreviousLine(2));
     /// ```
-    /// 
+    ///
     /// The previous example does the same thing as the following one:
-    /// 
+    ///
     /// ```no_run
     /// use std::io::{stdout, Write};
     /// use anes::{MoveCursorUp, MoveCursorToColumn};
@@ -271,7 +271,7 @@ sequence!(
     /// # Notes
     ///
     /// Beginning of the line (left cell) is represented as `1`.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -289,7 +289,7 @@ sequence!(
 // TODO Enhance example with Parser to show how to retrieve it
 sequence!(
     /// Asks for the current cursor position.
-    /// 
+    ///
     /// # Examples
     ///
     /// ```no_run

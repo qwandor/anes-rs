@@ -181,7 +181,7 @@ test_sequences!(
         SetBackgroundColor(Color::Yellow) => "\x1B[48;5;11m",
         SetBackgroundColor(Color::Blue) => "\x1B[48;5;12m",
         SetBackgroundColor(Color::Magenta) => "\x1B[48;5;13m",
-        SetBackgroundColor(Color::Cyan) => "\x1B[48;5;14m",        
+        SetBackgroundColor(Color::Cyan) => "\x1B[48;5;14m",
         SetBackgroundColor(Color::White) => "\x1B[48;5;15m",
         SetBackgroundColor(Color::Ansi(200)) => "\x1B[48;5;200m",
         SetBackgroundColor(Color::Rgb(1, 2, 3)) => "\x1B[48;2;1;2;3m",
