@@ -10,6 +10,7 @@ description = "ANSI Escape Sequences provider & parser"
 repository = "https://github.com/qwandor/anes-rs"
 documentation = "https://docs.rs/anes/"
 license = "MIT OR Apache-2.0"
+categories = ["command-line-interface", "parser-implementations"]
 keywords = ["terminal", "ansi", "sequence", "code", "parser"]
 exclude = ["target", "Cargo.lock"]
 readme = "README.md"
