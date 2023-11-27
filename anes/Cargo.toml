@@ -28,7 +28,7 @@ parser = ["bitflags"]
 bitflags = { version = "2.2.1", optional = true }
 
 [dev-dependencies]
-criterion = "0.3"
+criterion = "0.5"
 libc = "0.2.66"
 
 [[bench]]
