@@ -1,14 +1,12 @@
 name: stable
 
 on:
-  # Build master branch only
+  # Build main branch.
   push:
     branches:
-      - master
-  # Build pull requests targeting master branch only
+      - main
+  # Build all pull requests.
   pull_request:
-    branches:
-      - master
 
 jobs:
   test:
