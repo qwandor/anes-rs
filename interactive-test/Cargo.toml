@@ -1,8 +1,11 @@
 [package]
 name = "interactive-test"
 version = "0.0.1"
-authors = ["Robert Vojta <rvojta@me.com>"]
-edition = "2018"
+authors = [
+  "Robert Vojta <rvojta@me.com>",
+  "Andrew Walbran <qwandor@google.com>",
+]
+edition = "2021"
 description = "Interactive test for the anes."
 repository = "https://github.com/zrzka/anes-rs"
 documentation = "https://docs.rs/anes/"
