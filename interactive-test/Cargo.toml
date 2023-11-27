@@ -12,4 +12,4 @@ publish = false
 
 [dependencies]
 anes = { path = "../anes" }
-crossterm = "0.12"
+crossterm = "0.27"

@@ -1,8 +1,9 @@
-use std::io::{self, Write};
-
 use anes::{execute, queue};
-
-pub use crossterm::Result;
+use crossterm::{
+    event::{self, Event, KeyCode, KeyEvent},
+    terminal::enable_raw_mode,
+};
+use std::io::{self, Result, Write};
 
 #[macro_use]
 mod macros;
@@ -30,7 +31,7 @@ where
 {
     execute!(w, anes::SwitchBufferToAlternate)?;
 
-    let _raw = crossterm::RawScreen::into_raw_mode()?;
+    enable_raw_mode()?;
 
     loop {
         queue!(
@@ -64,11 +65,19 @@ where
 }
 
 pub fn read_char() -> Result<char> {
-    crossterm::input().read_char()
+    loop {
+        if let Event::Key(KeyEvent {
+            code: KeyCode::Char(c),
+            ..
+        }) = event::read()?
+        {
+            return Ok(c);
+        }
+    }
 }
 
 pub fn buffer_size() -> Result<(u16, u16)> {
-    crossterm::terminal().size()
+    crossterm::terminal::size()
 }
 
 fn main() -> Result<()> {
