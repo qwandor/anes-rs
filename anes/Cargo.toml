@@ -35,3 +35,7 @@ libc = "0.2.66"
 name = "bench_main"
 harness = false
 required-features = ["parser"]
+
+[[example]]
+name = "parser"
+required-features = ["parser"]
