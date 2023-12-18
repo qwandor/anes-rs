@@ -11,5 +11,5 @@ exclude = ["target", "Cargo.lock"]
 publish = false
 
 [dependencies]
-afl = "0.14.5"
+afl = "0.15.1"
 anes = { path = "../anes", features = ["parser"] }
