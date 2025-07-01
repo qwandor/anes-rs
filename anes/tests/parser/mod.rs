@@ -1,6 +1,6 @@
 #[macro_export]
 macro_rules! test_sequence {
-    ($bytes:expr, $seq:expr) => {
+    ($bytes:expr_2021, $seq:expr_2021) => {
         let mut parser = ::anes::parser::Parser::default();
         parser.advance($bytes, false);
         assert_eq!(parser.next(), Some($seq));
@@ -11,7 +11,7 @@ macro_rules! test_sequence {
 macro_rules! test_sequences {
     (
         $(
-            $bytes:expr, $seq:expr,
+            $bytes:expr_2021, $seq:expr_2021,
         )*
     ) => {
         $(

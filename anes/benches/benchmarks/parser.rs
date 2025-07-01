@@ -1,4 +1,4 @@
-use criterion::{black_box, criterion_group, Criterion};
+use criterion::{Criterion, black_box, criterion_group};
 
 use anes::parser::Parser;
 

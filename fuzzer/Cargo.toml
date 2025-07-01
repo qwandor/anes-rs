@@ -2,7 +2,7 @@
 name = "anes-fuzzers"
 version = "0.0.1"
 authors = ["Robert Vojta <rvojta@me.com>"]
-edition = "2018"
+edition = "2024"
 description = "Anes fuzzers."
 repository = "https://github.com/zrzka/anes-rs"
 documentation = "https://docs.rs/anes/"

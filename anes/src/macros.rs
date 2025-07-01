@@ -11,7 +11,7 @@
 /// ```
 #[macro_export]
 macro_rules! csi {
-    ($($arg:expr),*) => { concat!("\x1B[", $($arg),*) };
+    ($($arg:expr_2021),*) => { concat!("\x1B[", $($arg),*) };
 }
 
 /// Creates an escape sequence.
@@ -27,7 +27,7 @@ macro_rules! csi {
 /// ```
 #[macro_export]
 macro_rules! esc {
-    ($($arg:expr),*) => { concat!("\x1B", $($arg),*) };
+    ($($arg:expr_2021),*) => { concat!("\x1B", $($arg),*) };
 }
 
 /// Creates a select graphic rendition sequence.
@@ -45,7 +45,7 @@ macro_rules! esc {
 /// ```
 #[macro_export]
 macro_rules! sgr {
-    ($($arg:expr),*) => { concat!("\x1B[", $($arg),* , "m") };
+    ($($arg:expr_2021),*) => { concat!("\x1B[", $($arg),* , "m") };
 }
 
 /// Creates an ANSI sequence.
@@ -115,7 +115,7 @@ macro_rules! sequence {
     // Static unit struct
     (
         $(#[$meta:meta])*
-        struct $name:ident => $value:expr
+        struct $name:ident => $value:expr_2021
     ) => {
         $(#[$meta])*
         #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
@@ -133,7 +133,7 @@ macro_rules! sequence {
         enum $name:ident {
             $(
                 $(#[$variant_meta:meta])*
-                $variant:ident => $variant_value:expr
+                $variant:ident => $variant_value:expr_2021
             ),*
             $(,)?
         }
@@ -165,7 +165,7 @@ macro_rules! sequence {
             $(,)?
         )
         =>
-        $write:expr
+        $write:expr_2021
     ) => {
         $(#[$meta])*
         #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
@@ -213,7 +213,7 @@ macro_rules! sequence {
 /// ```
 #[macro_export]
 macro_rules! queue {
-    ($dst:expr, $($sequence:expr),* $(,)?) => {{
+    ($dst:expr_2021, $($sequence:expr_2021),* $(,)?) => {{
         let mut error = None;
 
         $(
@@ -258,7 +258,7 @@ macro_rules! queue {
 /// ```
 #[macro_export]
 macro_rules! execute {
-    ($dst:expr, $($sequence:expr),* $(,)?) => {{
+    ($dst:expr_2021, $($sequence:expr_2021),* $(,)?) => {{
         if let Err(e) = $crate::queue!($dst, $($sequence),*) {
             Err(e)
         } else {
@@ -272,7 +272,7 @@ macro_rules! test_sequences {
     (
         $(
             $name:ident(
-                $($left:expr => $right:expr),*
+                $($left:expr_2021 => $right:expr_2021),*
                 $(,)?
             )
         ),*
