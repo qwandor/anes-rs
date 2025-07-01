@@ -14,7 +14,7 @@ pub(crate) fn parse_char(ch: char, esc_o: bool) -> Option<Sequence> {
     let code = match ch {
         '\r' | '\n' => KeyCode::Enter,
         '\t' => KeyCode::Tab,
-        '\x7F' => KeyCode::BackTab,
+        '\x7F' => KeyCode::Backspace,
         '\x1B' => KeyCode::Esc,
         '\0' => KeyCode::Null,
         _ => KeyCode::Char(ch),
