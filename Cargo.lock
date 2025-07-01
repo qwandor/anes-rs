@@ -31,7 +31,7 @@ checksum = "4b46cbb362ab8752921c97e041f5e366ee6297bd428a31275b9fcf1e380f7299"
 
 [[package]]
 name = "anes"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "bitflags",
  "criterion",
@@ -43,7 +43,7 @@ name = "anes-fuzzers"
 version = "0.0.1"
 dependencies = [
  "afl",
- "anes 0.2.0",
+ "anes 0.2.1",
 ]
 
 [[package]]
@@ -303,7 +303,7 @@ dependencies = [
 name = "interactive-test"
 version = "0.0.1"
 dependencies = [
- "anes 0.2.0",
+ "anes 0.2.1",
  "crossterm",
 ]
 

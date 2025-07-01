@@ -1,3 +1,7 @@
+# Version 0.2.1
+
+- Parse ASCII DEL as backspace rather than backtab.
+
 # Version 0.2.0
 
 - Updated to `bitflags` 2.
