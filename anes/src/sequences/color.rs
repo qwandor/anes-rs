@@ -96,8 +96,8 @@ impl fmt::Display for Color {
             Color::Magenta => write!(f, "5;13"),
             Color::Cyan => write!(f, "5;14"),
             Color::White => write!(f, "5;15"),
-            Color::Ansi(value) => write!(f, "5;{}", value),
-            Color::Rgb(r, g, b) => write!(f, "2;{};{};{}", r, g, b),
+            Color::Ansi(value) => write!(f, "5;{value}"),
+            Color::Rgb(r, g, b) => write!(f, "2;{r};{g};{b}"),
         }
     }
 }

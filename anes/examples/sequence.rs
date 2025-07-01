@@ -7,7 +7,7 @@ fn static_unit_struct() {
         struct Foo => csi!("foo")
     );
 
-    assert_eq!(&format!("{}", Foo), "\x1B[foo");
+    assert_eq!(&format!("{Foo}"), "\x1B[foo");
 }
 
 fn dynamic_struct() {

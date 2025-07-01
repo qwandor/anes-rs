@@ -319,7 +319,7 @@ mod tests {
             struct TestSeq => csi!("foo")
         );
 
-        assert_eq!(&format!("{}", TestSeq), "\x1B[foo");
+        assert_eq!(&format!("{TestSeq}"), "\x1B[foo");
     }
 
     #[test]

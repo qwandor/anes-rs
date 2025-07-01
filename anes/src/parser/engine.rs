@@ -540,7 +540,7 @@ mod tests {
         let mut engine = Engine::default();
         let mut provider = CharProvider::default();
 
-        advance(&mut engine, &mut provider, &['a' as u8], false);
+        advance(&mut engine, &mut provider, b"a", false);
         assert_eq!(provider.chars.len(), 1);
         assert_eq!(provider.chars[0], 'a');
 

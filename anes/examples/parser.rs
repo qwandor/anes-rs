@@ -43,7 +43,7 @@ fn main() -> Result<()> {
 
             let mut break_outer_loop = false;
 
-            while let Some(sequence) = parser.next() {
+            for sequence in parser.by_ref() {
                 match sequence {
                     Sequence::Key(KeyCode::Esc, _) => {
                         break_outer_loop = true;
