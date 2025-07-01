@@ -19,7 +19,7 @@ readme = "README.md"
 bench = false
 
 [badges]
-maintenance = { status = "actively-developed" }
+maintenance = { status = "passively-maintained" }
 
 [package.metadata.docs.rs]
 all-features = true
