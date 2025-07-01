@@ -2,6 +2,6 @@
 use anes::SaveCursorPosition;
 
 fn main() {
-    let string = format!("{}", SaveCursorPosition);
+    let string = format!("{SaveCursorPosition}");
     assert_eq!(&string, "\x1B7");
 }
