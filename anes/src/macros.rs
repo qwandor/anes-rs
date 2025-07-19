@@ -11,7 +11,7 @@
 /// ```
 #[macro_export]
 macro_rules! csi {
-    ($($arg:expr_2021),*) => { concat!("\x1B[", $($arg),*) };
+    ($($arg:expr),*) => { concat!("\x1B[", $($arg),*) };
 }
 
 /// Creates an escape sequence.
@@ -27,7 +27,7 @@ macro_rules! csi {
 /// ```
 #[macro_export]
 macro_rules! esc {
-    ($($arg:expr_2021),*) => { concat!("\x1B", $($arg),*) };
+    ($($arg:expr),*) => { concat!("\x1B", $($arg),*) };
 }
 
 /// Creates a select graphic rendition sequence.
@@ -45,7 +45,7 @@ macro_rules! esc {
 /// ```
 #[macro_export]
 macro_rules! sgr {
-    ($($arg:expr_2021),*) => { concat!("\x1B[", $($arg),* , "m") };
+    ($($arg:expr),*) => { concat!("\x1B[", $($arg),* , "m") };
 }
 
 /// Creates an ANSI sequence.
@@ -115,7 +115,7 @@ macro_rules! sequence {
     // Static unit struct
     (
         $(#[$meta:meta])*
-        struct $name:ident => $value:expr_2021
+        struct $name:ident => $value:expr
     ) => {
         $(#[$meta])*
         #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
@@ -133,7 +133,7 @@ macro_rules! sequence {
         enum $name:ident {
             $(
                 $(#[$variant_meta:meta])*
-                $variant:ident => $variant_value:expr_2021
+                $variant:ident => $variant_value:expr
             ),*
             $(,)?
         }
@@ -160,18 +160,18 @@ macro_rules! sequence {
     // Dynamic struct
     (
         $(#[$meta:meta])*
-        struct $type:ident(
+        struct $ty:ident(
             $($fields:ty),*
             $(,)?
         )
         =>
-        $write:expr_2021
+        $write:expr
     ) => {
         $(#[$meta])*
         #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq)]
-        pub struct $type($(pub $fields),*);
+        pub struct $ty($(pub $fields),*);
 
-        impl ::std::fmt::Display for $type {
+        impl ::std::fmt::Display for $ty {
             fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
                 let write: &dyn Fn(&Self, &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result =
                     &$write;
@@ -213,7 +213,7 @@ macro_rules! sequence {
 /// ```
 #[macro_export]
 macro_rules! queue {
-    ($dst:expr_2021, $($sequence:expr_2021),* $(,)?) => {{
+    ($dst:expr, $($sequence:expr),* $(,)?) => {{
         let mut error = None;
 
         $(
@@ -258,7 +258,7 @@ macro_rules! queue {
 /// ```
 #[macro_export]
 macro_rules! execute {
-    ($dst:expr_2021, $($sequence:expr_2021),* $(,)?) => {{
+    ($dst:expr, $($sequence:expr),* $(,)?) => {{
         if let Err(e) = $crate::queue!($dst, $($sequence),*) {
             Err(e)
         } else {
@@ -272,7 +272,7 @@ macro_rules! test_sequences {
     (
         $(
             $name:ident(
-                $($left:expr_2021 => $right:expr_2021),*
+                $($left:expr => $right:expr),*
                 $(,)?
             )
         ),*
