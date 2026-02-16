@@ -29,7 +29,7 @@ default = []
 parser = ["dep:bitflags"]
 
 [dependencies]
-bitflags = { version = "2.9.1", optional = true }
+bitflags = { version = "2.11.0", optional = true }
 
 [dev-dependencies]
 criterion = "0.6.0"
